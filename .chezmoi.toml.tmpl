@@ -1,0 +1,72 @@
+{{- $ephemeral := false -}}{{/* true if this machine is ephemeral, e.g. a cloud or VM instance */}}
+{{- $headless := false -}}{{/* true if this machine does not have a screen and keyboard */}}
+{{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
+
+{{- $osID := .chezmoi.os -}}
+{{- if (and (eq .chezmoi.os "linux") (hasKey .chezmoi.osRelease "id")) -}}
+{{-   $osID = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{- end -}}
+
+{{/* detect GitHub codespaces, VSCode remote containers, Docker containers, Multipass VMs, and Vagrant boxes */}}
+{{- if or (env "CODESPACES") (env "REMOTE_CONTAINERS_IPC") (eq .chezmoi.username "root" "ubuntu" "vagrant" "vscode") -}}
+{{-   $ephemeral = true -}}
+{{-   $headless = true -}}
+{{- end -}}
+
+{{/* work around unreliable hostname on darwin */}}
+{{- $hostname := .chezmoi.hostname -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   $computerName := output "scutil" "--get" "ComputerName" | trim -}}
+{{-   if eq $computerName "Kevin’s M1" -}}
+{{-     $hostname = "kevins-m1" -}}
+{{-   else -}}
+{{-     $hostname = $computerName -}}
+{{-   end -}}
+{{- end -}}
+
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $ephemeral = true -}}
+{{- end -}}
+
+{{- /* Initializes the name variable with a default value */ -}}
+{{- $name := "Kevin Buley" -}}
+{{- /* If name was previously set, reuses it */ -}}
+{{- if hasKey . "name" -}}
+{{-   $name = .name -}}
+{{- /* Otherwise, if running interactively, prompts for a name */ -}}
+{{- else if not $headless -}}
+{{-   $name = promptString "Display name" $name -}}
+{{- end -}}
+
+{{- /* Does the same for the email */ -}}
+{{- $email := "kevin@buley.org" -}}
+{{- if hasKey . "email" -}}
+{{-   $email = .email -}}
+{{- else if not $headless -}}
+{{-   $email = promptString "Email address" $email -}}
+{{- end -}}
+
+{{- if not $ephemeral -}}
+{{-   if stdinIsATTY -}}
+{{-     $headless = promptBoolOnce . "Headless" "headless" -}}
+{{-     $ephemeral = promptBoolOnce . "Ephemeral" "ephemeral" -}}
+{{-     $personal = promptBoolOnce . "Install secrets" "personal" -}}
+{{-   end -}}
+{{- end -}}
+
+{{- if stdinIsATTY -}}
+{{-   writeToStdout "💡 Tip: you can re-initialize by running `chezmoi init --data=false`.\n" -}}
+{{- end -}}
+
+
+[data]
+    ephemeral = {{ $ephemeral }}
+    email = {{ $email | quote }}
+    headless = {{ $headless }}
+    hostname = {{ $hostname | quote }}
+    personal = {{ $personal }}
+    osid = {{ $osID | quote }}
+    name = {{ $name | quote }}
+
+[github]
+    refreshPeriod = "12h"

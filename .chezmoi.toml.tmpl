@@ -1,6 +1,7 @@
 {{- $ephemeral := false -}}{{/* true if this machine is ephemeral, e.g. a cloud or VM instance */}}
 {{- $headless := false -}}{{/* true if this machine does not have a screen and keyboard */}}
 {{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
+{{- $work := false -}}{{/* true if this machine should have work secrets */}}
 
 {{- $osID := .chezmoi.os -}}
 {{- if (and (eq .chezmoi.os "linux") (hasKey .chezmoi.osRelease "id")) -}}
@@ -47,10 +48,21 @@
 {{- end -}}
 
 {{- if not $ephemeral -}}
-{{-   if stdinIsATTY -}}
+{{-   if eq $hostname "FVFGF0SVQ05Q" -}}
+{{-     $headless = false -}}
+{{-     $ephemeral = false -}}
+{{-     $work = true -}}
+{{-     $personal = false -}}
+{{-   else if eq $hostname "kevins-m1" -}}
+{{-     $headless = false -}}
+{{-     $ephemeral = false -}}
+{{-     $work = false -}}
+{{-     $personal = true -}}
+{{-   else if stdinIsATTY -}}
 {{-     $headless = promptBoolOnce . "Headless" "headless" -}}
 {{-     $ephemeral = promptBoolOnce . "Ephemeral" "ephemeral" -}}
-{{-     $personal = promptBoolOnce . "Install secrets" "personal" -}}
+{{-     $personal = promptBoolOnce . "Install personal secrets" "personal" -}}
+{{-     $work = promptBoolOnce . "Install work secrets" "work" -}}
 {{-   end -}}
 {{- end -}}
 
@@ -65,8 +77,18 @@
     headless = {{ $headless }}
     hostname = {{ $hostname | quote }}
     personal = {{ $personal }}
+    work = {{ $work }}
     osid = {{ $osID | quote }}
     name = {{ $name | quote }}
 
 [github]
     refreshPeriod = "12h"
+
+encryption = "age"
+useBuiltinAge = "on"
+[age]
+    identity = "~/.config/chezmoi/key.txt"
+    recipient = "age17ch6kn86pedgq785fls383l076ksavg0n3dtnakxyeajzq6kse5q0tsfsm"
+
+progress = "auto"
+

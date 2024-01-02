@@ -2,3 +2,7 @@ install.sh
 key.txt.age
 **/.DS_Store
 
+{{- if not .work }}
+.saml2aws
+{{- end }}
+

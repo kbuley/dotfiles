@@ -1,0 +1,13 @@
+{
+    "colorscheme": "darcula",
+    "eofnewline": false,
+    "fastdirty": true,
+    "hidehelp": false,
+    "matchbrace": false,
+    "matchbraceleft": false,
+    "pluginchannels": [
+        "https://raw.githubusercontent.com/micro-editor/plugin-channel/master/channel.json"
+    ],
+    "pluginrepos": [],
+    "termtitle": false
+}

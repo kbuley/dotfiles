@@ -1,0 +1,144 @@
+[user]
+  name = Kevin Buley
+  email = kevin@buley.org
+  signingkey = CF5F5B82D4650A0DDB77E311FB4DC0B804F9773D!
+[core]
+  editor = nvim
+  trustctime = false
+  filemode = false
+  autocrlf = input
+  repositoryformatversion = 0
+  logallrefupdates = true
+  ignorecase = true
+  precomposeunicode = true
+  pager = less -F 
+  abbrev = 8
+  quotePath = false
+  untrackedCache = true
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  ui = true
+  pager = true
+  page = true
+[push]
+  default = simple
+  autoSetupRemote = true
+  followTags = true
+  useForceIfIncludes = true
+[credential]
+  helper = cache --timeout=3600
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+[commit]
+  # template = $XDG_CONFIG_HOME/git/git-commit-template
+  cleanup = strip
+  gpgsign = true
+[diff]
+  tool = nvim
+  colorMoved = zebra
+  algorithm = histogram
+  indentHeuristic = true
+  mnemonicPrefix = true
+  rename = copies
+[difftool]
+  prompt = false
+[difftool "vscode"]
+  cmd = code --wait --diff $LOCAL $REMOTE
+[difftool "nvim"]
+  cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+[merge]
+  tool = nvim
+  ff = only
+[mergetool]
+  keepBackup = false
+  prompt = false
+[mergetool "nvim"]
+  cmd = nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\"
+[mergetool "vscode"]
+  cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+[gpg]
+{{ if eq .chezmoi.os "darwin" -}}
+{{  `  program = /usr/local/MacGPG2/bin/gpg2` }}
+{{ else -}}
+{{  `  program = gpg` }}
+{{ end -}}
+[fetch]
+  verbose = full
+  tags = true
+  prune = true
+  pruneTags = true
+  writeCommitGraph = true
+[pull]
+  rebase = merges
+[init]
+  defaultBranch = main
+[branch]
+  autosetuprebase = always
+[http]
+  sslVerify = true
+[log]
+  abbrevcommit = yes
+[safe]
+  directory = /workspace
+[alias]
+  rank = "shortlog -s -n --no-merges"
+  last = log -1 --stat
+  cp = cherry-pick
+  co = checkout
+  cl = clone
+  ci = commit
+  st = status -sb
+  br = branch
+  unstage = reset HEAD --
+  dc = diff --cached
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %Cblue<%an>%Creset' --date=relative
+  taglog = log --tags --no-walk --date=iso-local --pretty='%C(auto)%h %cd%d %s'
+  get = pull --verbose --progress --tags --prune
+  up = pull --rebase --autostash --verbose --progress --tags --prune
+  testmerge = merge --no-commit --no-ff
+  branch-prune = "!git branch -vv && git fetch -p && for b in $(git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads); do git branch -D $b; done"
+  add-archive = "!git update-ref refs/archive/$(date '+%Y%m%d-%s')"
+  list-archive = for-each-ref --sort=-authordate --format='%(refname) %(objectname:short) %(contents:subject)' refs/archive/
+  worktree-clone = "!sh $XDG_CONFIG_HOME/git/git-worktree-clone"
+
+[rebase]
+  autostash = true
+  autoSquash = true
+  updateRefs = true
+[color "branch"]
+  current = yellow
+  remote = green
+  local = yellow
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[grep]
+  column = true
+  fullName = true
+  lineNumber = true
+[notes]
+  rewriteRef = refs/notes/commits
+[rerere]
+  autoUpdate = true
+  enabled = true
+[revert]
+  reference = true
+[status]
+  showUntrackedFiles = all
+[tag]
+  gpgSign = true
+  sort = version:refname
+[transfer]
+  fsckObjects = true
+[url "https://github.com/"]
+  insteadOf = gh
+[fetch "fsck"]
+  zeroPaddedFilemode = warn

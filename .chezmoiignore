@@ -4,5 +4,11 @@ key.txt.age
 
 {{- if not .work }}
 .saml2aws
+.config/Windows Azure Powershell
+.config/Windows Azure Powershell/**
+.config/argocd
+.config/argocd/**
+.config/aws
+.config/aws/**
 {{- end }}
 

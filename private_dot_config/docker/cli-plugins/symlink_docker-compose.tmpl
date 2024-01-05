@@ -1,0 +1,5 @@
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   $prefix := output "brew" "--prefix" | trim -}}
+{{-   joinPath $prefix "opt" "docker-compose" "bin" "docker-compose" -}}
+{{- end -}}
+

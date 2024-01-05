@@ -4,8 +4,11 @@
 # -u: exit on unset variables
 set -eu
 
+bin_dir="${HOME}/.local/bin"
+
+export PATH=${bin_dir}:$PATH
+
 if ! chezmoi="$(command -v chezmoi)"; then
-	bin_dir="${HOME}/.local/bin"
 	chezmoi="${bin_dir}/chezmoi"
 	echo "Installing chezmoi to '${chezmoi}'" >&2
 	if command -v curl >/dev/null; then

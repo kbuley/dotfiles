@@ -1,0 +1,93 @@
+# Read before any other z* files
+export XDG_DATA_HOME=${XDG_DATA_HOME:=$HOME/.local/share}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=$HOME/.config}
+export XDG_STATE_HOME=${XDG_STATE_HOME:=$HOME/.local/state}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:=$HOME/.cache}
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:=~/Library/Caches/Temp}
+else
+  export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:=/run/user/$UID}
+fi
+
+export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME"/aws/credent
+export AWS_CONFIG_FILE="$XDG_CONFIG_HOME"/aws/config
+
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+
+export MACHINE_STORAGE_PATH="$XDG_DATA_HOME"/docker-machine
+export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
+
+export GEM_HOME="${XDG_DATA_HOME}"/gem
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}"/gem
+
+export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+
+export K9SCONFIG="$XDG_CONFIG_HOME"/k9s
+
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
+
+export MINIKUBE_HOME="$XDG_DATA_HOME"/minikube
+
+export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
+
+export NUGET_PACKAGES="$XDG_CACHE_HOME"/NuGetPackages
+
+export PLATFORMIO_CORE_DIR="$XDG_DATA_HOME"/platformio
+
+export PYENV_ROOT="$XDG_DATA_HOME"/pyenv
+
+export PYLINTHOME="${XDG_CACHE_HOME}"/pylint
+
+export AZURE_CONFIG_DIR="$XDG_DATA_HOME"/azure
+
+export PYTHONSTARTUP="${XDG_CONFIG_HOME}/python/pythonrc"
+
+export REDISCLI_HISTFILE="$XDG_DATA_HOME"/redis/rediscli_history
+
+export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
+
+export HISTFILE="$XDG_STATE_HOME"/zsh/history
+
+export POWERLEVEL9K_CONFIG_FILE="$XDG_CONFIG_HOME/zsh/p10k.zsh"
+
+export SSH_KEY_PATH="~/.ssh/kevin@buley.org"
+
+export PYTHONDONTWRITEBYTECODE=1
+
+export KUBE_EDITOR=$EDITOR
+
+export DOTNET_ROOT=/usr/local/opt/dotnet/libexec
+
+export PODMAN_USERNS=keep-id:uid=1000,gid=1000
+
+export DISABLE_AUTO_TITLE='true'
+
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
+
+export ZIM_HOME=${XDG_CACHE_HOME}/zim
+
+export VIMINIT="if has('nvim') | so ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.vim | else | set nocp | so ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc | endif"
+
+#color the man pages
+export LESS_TERMCAP_mb=$'\e[1;32m'
+export LESS_TERMCAP_md=$'\e[1;32m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[01;33m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[1;4;31m'
+
+
+export CONSUL_HTTP_ADDR=http://orlpconsullv01.catmktg.com:8500
+#export CONSUL_HTTP_TOKEN=.
+export VAULT_ADDR=https://secrets.catmktg.com:8200
+#export VAULT_TOKEN=.
+export GOVC_URL=https://orlpvcsa1.catmktg.com/sdk
+export GOVC_USERNAME=admin_kbuley@catmktg.com
+export GOVC_INSECURE=True
+#export GOVC_PASSWORD='.'
+
+export TERMINFO="$XDG_DATA_HOME"/terminfo
+export TERMINFO_DIRS="$XDG_DATA_HOME"/terminfo:/usr/share/terminfo
+

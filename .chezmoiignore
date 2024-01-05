@@ -12,3 +12,7 @@ key.txt.age
 .config/aws/**
 {{- end }}
 
+{{- if (and ( not .work ) ( not .personal )) }}
+.ssh/**
+.gnupg/**
+{{- end -}}

@@ -1,0 +1,29 @@
+# List of allowed ssh keys.  Only keys present in this file are used
+# in the SSH protocol.  The ssh-add tool may add new entries to this
+# file to enable them; you may also add them manually.  Comment
+# lines, like this one, as well as empty lines are ignored.  Lines do
+# have a certain length limit but this is not serious limitation as
+# the format of the entries is fixed and checked by gpg-agent. A
+# non-comment line starts with optional white spaces, followed by the
+# keygrip of the key given as 40 hex digits, optionally followed by a
+# caching TTL in seconds, and another optional field for arbitrary
+# flags.   Prepend the keygrip with an '!' mark to disable it.
+
+# kevin@buley.org
+42AA74ACD5D77BC0EC147C8B64CD03C34601FDFF 0
+
+# Catalina
+# RSA key added on: 2017-12-20 21:10:12
+# Fingerprints:  MD5:05:f1:37:33:d6:5f:ff:b4:ee:2b:19:5e:b9:3b:10:d1
+#                SHA256:Y8iOhkyw9hDe2PU/r8JL9oNdQTqLC/Y3ssvOQiwlvfQ
+8D0FF26405A4A84C3E0CF565F5A34033623E3C30 0
+
+# kevin@buley.org OLD KEY
+# RSA key added on: 2017-10-10 12:04:50
+# Fingerprints:  MD5:cd:b8:43:15:eb:de:7f:bf:e1:73:c8:56:e4:36:23:8a
+#                SHA256:iSaV2UtbKqYSpRAX/MJ2GmNTsocNKqzqUnFjTfpy+0c
+D35AA49C0C596D2DB6A9CAC875A4BC82A49B5CFD 0
+# RSA key added on: 2023-06-29 13:47:38
+# Fingerprints:  MD5:ce:66:c0:69:a7:04:d0:c1:9a:60:e4:de:53:86:ca:ed
+#                SHA256:8VllonvL6f2BcC1ILyeAfgl03gEn7FiJ8Oz3slxREyo
+D3B4940A4D33427C187825931B2B2AC8A33705B4 0

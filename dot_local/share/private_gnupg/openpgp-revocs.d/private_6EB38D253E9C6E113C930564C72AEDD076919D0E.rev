@@ -1,0 +1,29 @@
+This is a revocation certificate for the OpenPGP key:
+
+pub   ed25519/0xC72AEDD076919D0E 2023-06-27 [S]
+      6EB38D253E9C6E113C930564C72AEDD076919D0E
+      Key fingerprint = 6EB3 8D25 3E9C 6E11 3C93  0564 C72A EDD0 7691 9D0E
+uid                            Kevin Buley
+
+A revocation certificate is a kind of "kill switch" to publicly
+declare that a key shall not anymore be used.  It is not possible
+to retract such a revocation certificate once it has been published.
+
+Use it to revoke this key in case of a compromise or loss of
+the secret key.  However, if the secret key is still accessible,
+it is better to generate a new revocation certificate and give
+a reason for the revocation.  For details see the description of
+of the gpg command "--generate-revocation" in the GnuPG manual.
+
+To avoid an accidental use of this file, a colon has been inserted
+before the 5 dashes below.  Remove this colon with a text editor
+before importing and publishing this revocation certificate.
+
+:-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: This is a revocation certificate
+
+iHgEIBYKACAWIQRus40lPpxuETyTBWTHKu3QdpGdDgUCZJrfvQIdAAAKCRDHKu3Q
+dpGdDujjAQDKJaYcx1KpQZgRgV3QuooQIooZkpRooJhpmxqh5qH+uAD/SDVc/kTH
+BxwQzl4iB9qvdA2YDKEGEVhEcJVuNvrEhww=
+=1yYr
+-----END PGP PUBLIC KEY BLOCK-----

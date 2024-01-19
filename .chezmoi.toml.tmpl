@@ -70,6 +70,9 @@
 {{-   writeToStdout "💡 Tip: you can re-initialize by running `chezmoi init --data=false`.\n" -}}
 {{- end -}}
 
+encryption = "age"
+useBuiltinAge = true
+progress = "auto"
 
 [data]
     ephemeral = {{ $ephemeral }}
@@ -84,11 +87,7 @@
 [github]
     refreshPeriod = "12h"
 
-encryption = "age"
-useBuiltinAge = true
 [age]
     identity = "~/.config/chezmoi/key.txt"
     recipient = "age17ch6kn86pedgq785fls383l076ksavg0n3dtnakxyeajzq6kse5q0tsfsm"
-
-progress = "auto"
 

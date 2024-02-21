@@ -14,5 +14,5 @@ key.txt.age
 
 {{- if (and ( not .work ) ( not .personal )) }}
 .ssh/**
-.gnupg/**
+.local/share/gnupg/**
 {{- end -}}

@@ -2,4 +2,8 @@
     type = "archive-file"
     url = "https://dl.filippo.io/age/latest?for={{ .chezmoi.os }}/{{ .chezmoi.arch }}"
     path = "age/age"
+[".config/nvim"]
+    type = "git-repo"
+    url = "https://github.com/kbuley/nvim.git"
+    refreshPeriod = "168h"
 

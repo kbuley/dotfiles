@@ -156,8 +156,6 @@ test -e "${ZDOTDIR}/.iterm2_shell_integration.zsh" && source "${ZDOTDIR}/.iterm2
 
 if [ -f "`which nvim`" ]; then
   export EDITOR='nvim'
-  alias vim="nvim"
-  alias vi="nvim"
 else
   export EDITOR='vi'
 fi

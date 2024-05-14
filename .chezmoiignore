@@ -1,6 +1,7 @@
 install.sh
 key.txt.age
 **/.DS_Store
+LICENSE
 
 {{- if not .work }}
 .saml2aws

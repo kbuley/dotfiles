@@ -1,0 +1,6 @@
+{{- if hasKey . "github_username" -}}
+{{ range gitHubKeys .github_username -}}
+{{   .Key }}
+{{ end -}}
+{{- end -}}
+

@@ -47,6 +47,14 @@
 {{-   $email = promptString "Email address" $email -}}
 {{- end -}}
 
+{{- /* and for github username */ -}}
+{{- $GITHUB_USERNAME := "kbuley" -}}
+{{- if hasKey . "github_username" -}}
+{{-   $github_username = .github_username -}}
+{{- else if not $headless -}}
+{{-   $GITHUB_USERNAME = promptString "Github username" $GITHUB_USERNAME -}}
+{{- end -}}
+
 {{- if not $ephemeral -}}
 {{-   if eq $hostname "FVFGF0SVQ05Q" -}}
 {{-     $headless = false -}}
@@ -83,6 +91,7 @@ progress = "auto"
     work = {{ $work }}
     osid = {{ $osID | quote }}
     name = {{ $name | quote }}
+    github_username = {{ $GITHUB_USERNAME | quote }}
 
 [github]
     refreshPeriod = "12h"

@@ -12,6 +12,8 @@
 	<string>FiraCode Nerd Font</string>
 	<key>BracketedPasteMode</key>
 	<true/>
+	<key>ClickToSelectCommand</key>
+	<false/>
 	<key>ClosingTmuxTabKillsTmuxWindows</key>
 	<true/>
 	<key>ClosingTmuxTabKillsTmuxWindows_selection</key>
@@ -1209,7 +1211,7 @@
 			<key>Character Encoding</key>
 			<integer>4</integer>
 			<key>Close Sessions On End</key>
-			<true/>
+			<integer>1</integer>
 			<key>Columns</key>
 			<integer>80</integer>
 			<key>Command</key>
@@ -1584,6 +1586,8 @@
 				<key>Red Component</key>
 				<real>0.0</real>
 			</dict>
+			<key>Load Shell Integration Automatically</key>
+			<false/>
 			<key>Mouse Reporting</key>
 			<true/>
 			<key>Name</key>
@@ -1594,6 +1598,8 @@
 			<true/>
 			<key>Normal Font</key>
 			<string>FiraCodeNF-Reg 11</string>
+			<key>Open Password Manager Automatically</key>
+			<false/>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
 			<key>Prompt Before Closing 2</key>
@@ -3007,12 +3013,16 @@
 	<integer>1</integer>
 	<key>TabStyleWithAutomaticOption</key>
 	<integer>1</integer>
+	<key>TmuxSyncClipboard</key>
+	<true/>
 	<key>TmuxUsesDedicatedProfile</key>
 	<false/>
 	<key>ToolbeltTools</key>
 	<array>
 		<string>Profiles</string>
 	</array>
+	<key>URLHandlersByGuid</key>
+	<dict/>
 	<key>VisualIndicatorForEsc</key>
 	<false/>
 	<key>WordCharacters</key>

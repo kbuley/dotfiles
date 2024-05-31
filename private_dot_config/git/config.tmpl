@@ -23,7 +23,6 @@
   interactive = auto
   ui = true
   pager = true
-  page = true
 [push]
   default = simple
   autoSetupRemote = true
@@ -41,7 +40,6 @@
   cleanup = strip
   gpgsign = true
 [diff]
-  tool = nvim
   colorMoved = zebra
   algorithm = histogram
   indentHeuristic = true
@@ -53,8 +51,9 @@
   cmd = code --wait --diff $LOCAL $REMOTE
 [difftool "nvim"]
   cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+[difftool "difft"]
+  cmd = difft "$LOCAL" "$REMOTE"
 [merge]
-  tool = nvim
   ff = only
 [mergetool]
   keepBackup = false
@@ -107,7 +106,8 @@
   add-archive = "!git update-ref refs/archive/$(date '+%Y%m%d-%s')"
   list-archive = for-each-ref --sort=-authordate --format='%(refname) %(objectname:short) %(contents:subject)' refs/archive/
   worktree-clone = "!sh $XDG_CONFIG_HOME/git/git-worktree-clone"
-
+  difft = --paginate difftool --tool=difft
+  nvim = mergetool --tool=nvim
 [rebase]
   autostash = true
   autoSquash = true

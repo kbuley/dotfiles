@@ -10,3 +10,12 @@ repositories:
   password: ""
   url: https://charts.helm.sh/stable
   username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: cloudecho
+  pass_credentials_all: false
+  password: ""
+  url: https://cloudecho.github.io/charts/
+  username: ""

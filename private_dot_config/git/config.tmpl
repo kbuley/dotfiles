@@ -24,7 +24,7 @@
   ui = true
   pager = true
 [push]
-  default = simple
+  default = current
   autoSetupRemote = true
   followTags = true
   useForceIfIncludes = true
@@ -106,6 +106,7 @@
   add-archive = "!git update-ref refs/archive/$(date '+%Y%m%d-%s')"
   list-archive = for-each-ref --sort=-authordate --format='%(refname) %(objectname:short) %(contents:subject)' refs/archive/
   worktree-clone = "!sh $XDG_CONFIG_HOME/git/git-worktree-clone"
+  checkout-worktree = "!git branch -vv && git fetch -p && for b in $(git for-each-ref --format='%(refname:short)' refs/heads); do git worktree add -f $b; done"
   difft = --paginate difftool --tool=difft
   nvim = mergetool --tool=nvim
 [rebase]

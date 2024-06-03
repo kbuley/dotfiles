@@ -50,7 +50,7 @@
 [difftool "vscode"]
   cmd = code --wait --diff $LOCAL $REMOTE
 [difftool "nvim"]
-  cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+  cmd = nvim -d "$LOCAL" "$REMOTE"
 [difftool "difft"]
   cmd = difft "$LOCAL" "$REMOTE"
 [merge]
@@ -59,7 +59,7 @@
   keepBackup = false
   prompt = false
 [mergetool "nvim"]
-  cmd = nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\"
+  cmd = nvim -d -c "wincmd l" -c "norm ]c" "$LOCAL" "$MERGED" "$REMOTE"
 [mergetool "vscode"]
   cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 [gpg]

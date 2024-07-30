@@ -1,3 +1,4 @@
+
 if [[ "$(uname)" = Darwin ]]; then
   if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
@@ -20,6 +21,11 @@ if [[ "$(uname)" = Darwin ]]; then
   defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
   export PATH="$HOME/bin:$(brew --prefix)/bin:/usr/local/bin:/usr/local/sbin:$PATH"
+
+  if [ -d "$(brew --prefix)/opt/ruby/bin" ]; then
+    export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+    export PATH=`gem environment gemdir`/bin:$PATH
+  fi
 fi
 
 

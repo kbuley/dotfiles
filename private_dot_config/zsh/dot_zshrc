@@ -188,3 +188,7 @@ if [ -f /opt/homebrew/Caskroom/miniconda/base/bin/conda ]; then
   # <<< conda initialize <<<
 fi
 
+if [ -x "$(command -v eza)" ]; then
+  alias ls="eza --icons=always"
+fi
+

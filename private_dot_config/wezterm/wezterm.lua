@@ -70,8 +70,8 @@ config.keys = {
 	{ key = "l", mods = "LEADER", action = wezterm.action({ ActivatePaneDirection = "Right" }) },
 
 	-- Mpve between workspaces
-	{ key = "n", mods = "CTRL", action = wezterm.action.SwitchWorkspaceRelative(1) },
-	{ key = "b", mods = "CTRL", action = wezterm.action.SwitchWorkspaceRelative(-1) },
+	{ key = "n", mods = "LEADER", action = wezterm.action.SwitchWorkspaceRelative(1) },
+	{ key = "b", mods = "LEADER", action = wezterm.action.SwitchWorkspaceRelative(-1) },
 
 	-- Copy and paste from clipboard
 	{ key = "p", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },

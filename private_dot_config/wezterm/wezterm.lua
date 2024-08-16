@@ -57,15 +57,6 @@ end)
 -- Use the defaults as a base
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
--- make username/project paths clickable. this implies paths like the following are for github.
--- ( "nvim-treesitter/nvim-treesitter" | wbthomason/packer.nvim | wez/wezterm | "wez/wezterm.git" )
--- as long as a full url hyperlink regex exists above this it should not match a full url to
--- github or gitlab / bitbucket (i.e. https://gitlab.com/user/project.git is still a whole clickable url)
-table.insert(config.hyperlink_rules, {
-	regex = [[[^:]["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
-	format = "https://www.github.com/$1/$3",
-})
-
 -- localhost, with protocol, with optional port and path
 table.insert(config.hyperlink_rules, {
 	regex = [[http(s)?://localhost(?>:\d+)?]],
@@ -147,8 +138,8 @@ config.keys = {
 			end),
 		}),
 	},
-	{ key = "w", mods = "LEADER", action = wezterm.action.ShowTabNavigator },
-	{ key = "&", mods = "LEADER|SHIFT", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
+	{ key = "t", mods = "LEADER", action = wezterm.action.ShowTabNavigator },
+	{ key = "k", mods = "LEADER|SHIFT", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
 	-- Panes
 	{
 		-- Vertical split
@@ -162,7 +153,11 @@ config.keys = {
 		mods = "LEADER|SHIFT",
 		action = wezterm.action.SplitPane({ direction = "Down", size = { Percent = 50 } }),
 	},
-	{ key = "{", mods = "LEADER|SHIFT", action = wezterm.action.PaneSelect({ mode = "SwapWithActiveKeepFocus" }) },
+	-- Rotate Panes
+	{ key = "{", mods = "LEADER|SHIFT", action = wezterm.action.RotatePanes("CounterClockwise") },
+	{ key = "}", mods = "LEADER|SHIFT", action = wezterm.action.RotatePanes("Clockwise") },
+	-- Swap Panes
+	{ key = "q", mods = "LEADER", action = wezterm.action.PaneSelect({ mode = "SwapWithActiveKeepFocus" }) },
 	-- Muxer
 	{
 		-- Attach to muxer
@@ -204,6 +199,16 @@ config.keys = {
 	{ key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
 	{ key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
 }
+
+-- Move tabs
+for i = 1, 8 do
+	-- CTRL+ALT + number to move to that position
+	table.insert(config.keys, {
+		key = tostring(i),
+		mods = "CTRL|ALT",
+		action = wezterm.action.MoveTab(i - 1),
+	})
+end
 
 local process_icons = {
 	["bash"] = wezterm.nerdfonts.cod_terminal_bash,

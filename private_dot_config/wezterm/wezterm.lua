@@ -198,8 +198,10 @@ config.keys = {
 	{ key = "+", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
 	{ key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
 	{ key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
-}
 
+	-- Send ctrl-B to tmux
+	{ key = "b", mods = "LEADER|CTRL", action = wezterm.action.SendKey({ key = "b", mods = "CTRL" }) },
+}
 -- Move tabs
 for i = 1, 8 do
 	-- CTRL+ALT + number to move to that position

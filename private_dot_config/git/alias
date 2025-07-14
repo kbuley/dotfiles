@@ -1,0 +1,413 @@
+# -*- mode: gitconfig; -*-
+# vim: set filetype=gitconfig:
+
+[alias]
+rank = "shortlog -s -n --no-merges"
+last = log -1 --stat
+cp = cherry-pick
+co = checkout
+cl = clone
+ci = commit
+st = status -sb
+br = branch
+unstage = reset HEAD --
+dc = diff --cached
+lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %Cblue<%an>%Creset' --date=relative
+taglog = log --tags --no-walk --date=iso-local --pretty='%C(auto)%h %cd%d %s'
+get = pull --verbose --progress --tags --prune
+up = pull --rebase --autostash --verbose --progress --tags --prune
+testmerge = merge --no-commit --no-ff
+add-archive = "!git update-ref refs/archive/$(date '+%Y%m%d-%s')"
+list-archive = for-each-ref --sort=-authordate --format='%(refname) %(objectname:short) %(contents:subject)' refs/archive/
+worktree-clone = "!$XDG_CONFIG_HOME/git/git-worktree-clone"
+worktree-update = "!$XDG_CONFIG_HOME/git/git-worktree-update"
+worktree-branch = "!$XDG_CONFIG_HOME/git/git-worktree-branch"
+difft = --paginate difftool --tool=difft
+dlog = -c diff.external=difft log -p --ext-diff
+dshow = -c diff.external=difft show --ext-diff
+ddiff = -c diff.external=difft diff
+unmerged = -c diff.external=difft diff main... --ext-diff
+# See https://blog.filippo.io/git-fixup-amending-an-older-commit/
+# This is a slightly modified version
+fixup = "!f() { TARGET=$(git rev-parse \"$1\"); git commit --fixup=$TARGET && GIT_EDITOR=true git rebase --interactive --autosquash $TARGET~; }; f"
+
+# Last tag in the current branch
+last-tag = describe --tags --abbrev=0
+
+# Last annotated tag in all branches
+last-tagged = !git describe --tags `git rev-list --tags --max-count=1`
+
+# Last tag matching chars
+find-tag = !"f() { git describe --match \"*$1*\" --abbrev=0 --tags $(git rev-list --tags --max-count=1); }; f"
+
+# From https://gist.github.com/492227
+heads = !"git log origin/main.. --format='%Cred%h%Creset;%C(yellow)%an%Creset;%H;%Cblue%f%Creset' | git name-rev --annotate-stdin --always --name-only | column -t -s';'"
+
+# Diff using our preferred options. A.k.a. `dd`.
+diff-deep = diff --check --dirstat --find-copies --find-renames --histogram --color
+
+# Find text in any commit ever.
+grep-all = !"f() { git rev-list --all | xargs git grep \"$@\"; }; f"
+
+# Find text and group the output lines. A.k.a. `gg`.
+grep-group = grep --break --heading --line-number --color
+
+# Find text with ack-like formatting.
+grep-ack = \
+  -c color.grep.linenumber=\"bold yellow\" \
+  -c color.grep.filename=\"bold green\" \
+  -c color.grep.match=\"reverse yellow\" \
+  grep --break --heading --line-number
+
+# Given a merge commit, find the span of commits that exist(ed).
+# Not so useful in itself, but used by other aliases.
+# Thanks to Rob Miller for the merge-span-* aliaes.
+merge-span = !"f() { echo $(git log -1 $2 --merges --pretty=format:%P | cut -d' ' -f1)$1$(git log -1 $2 --merges --pretty=format:%P | cut -d' ' -f2); }; f"
+
+# Find the commits that were introduced by a merge
+merge-span-log = "!git log `git merge-span .. $1`"
+
+# Show the changes that were introduced by a merge
+merge-span-diff = !"git diff `git merge-span ... $1`"
+
+# Show the changes that were introduced by a merge, in your difftool
+merge-span-difftool = !"git difftool `git merge-span ... $1`"
+
+# Interactively rebase all the commits on the current branch
+rebase-branch = "!f() { git rebase --interactive $(git merge-base $(git default-branch)) HEAD); }; f"
+
+# Sort by date for branches; can be useful for spring cleaning
+refs-by-date = for-each-ref --sort=-committerdate --format='%(committerdate:short) %(refname:short)'
+
+# Find all objects that aren't referenced by any other object (orphans).
+# To help an orphan, we create a new branch with the orphan's commit hash,
+# then merge it into our current branch:
+#
+#    git branch foo <commit>
+#    git merge foo
+#
+orphans = fsck --full
+
+# List all blobs by size in bytes.
+# By [CodeGnome](http://www.codegnome.com/)
+rev-list-all-objects-by-size = !"git rev-list --all --objects  | awk '{print $1}'| git cat-file --batch-check | fgrep blob | sort -k3nr"
+
+# List all objects by size in bytes and file name.
+# By [raphinesse](https://stackoverflow.com/users/380229/raphinesse)
+rev-list-all-objects-by-size-and-name = !"git rev-list --all --objects | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | awk '/^blob/ {print substr($0,6)}' | sort --numeric-sort --key=2"
+
+# Show log with the recent hour, day, week, month, year
+log-1-hour  = log --since=1-hour-ago
+log-1-day   = log --since=1-day-ago
+log-1-week  = log --since=1-week-ago
+log-1-month = log --since=1-month-ago
+log-1-year  = log --since=1-year-ago
+
+# chart: show a summary chart of activity per author.
+#
+# Example:
+#
+#     $ git chart
+#     ..X..........X...2..12 alice@example.com
+#     ....2..2..13.......... bob@example.com
+#     2.....1....11......... carol@example.com
+#     ..1............1..1... david@example.com
+#     ....1.......1.3.3.22.2 eve@example.com
+#
+# The chart rows are the authors.
+# TODO: sort the rows meaningfully,
+# such as alphabetically, or by count.
+#
+# The chart columns are the days.
+# The chart column prints one character per day.
+#
+#   * For 1-9 commits, show the number.
+#   * For 10 or more commits, show "X" as a visual indicator.
+#   * For no commits, show "." as a visual placeholder.
+#
+# The chart timeline adjusts the date range automatically:
+#
+#   * The timeline starts with the date of the earliest commit.
+#   * The timeline stops with the date of the latest commit.
+#   * The intent is to show the most relevant information.
+#
+# The chart default is to look at the past 6 weeks;
+# this gives a good balance of recency and speed
+# for a team that's currently working on a repo,
+# and also gives a good balance of fitting within
+# one terminal window 80 character width.
+#
+# You can adjust how far back the chart looks,
+# by providing your own `--since` parameter.
+# For example if you want to chart an older repo,
+# that does not have any recent commits, then you
+# you must provide a longer `--since` parameter.
+#
+chart = "!f() { \
+  git log \
+  --format=oneline \
+  --format=\"%aE %at\" \
+  --since=6-weeks-ago \
+  $* | \
+  gawk ' \
+  function time_to_slot(t) { return strftime(\"%Y-%m-%d\", t, true) } \
+  function count_to_char(i) { return (i > 0) ? ((i < 10) ? i : \"X\") : \".\" } \
+  BEGIN { \
+    time_min = systime(); time_max = 0; \
+    SECONDS_PER_DAY=86400; \
+  } \
+  { \
+    item = $1; \
+    time = 0 + $2; \
+    if (time > time_max){ time_max = time } else if (time < time_min){ time_min = time }; \
+    slot = time_to_slot(time); \
+    items[item]++; \
+    slots[slot]++; \
+    views[item, slot]++; \
+  } \
+  END{ \
+    printf(\"Chart time range %s to %s.\\n\", time_to_slot(time_min), time_to_slot(time_max)); \
+    time_max_add = time_max += SECONDS_PER_DAY; \
+    for(item in items){ \
+      row = \"\"; \
+      for(time = time_min; time < time_max_add; time += SECONDS_PER_DAY) { \
+        slot = time_to_slot(time); \
+        count = views[item, slot]; \
+        row = row count_to_char(count); \
+      } \
+      print row, item; \
+    } \
+  }'; \
+}; f"
+
+# churn: show log of files that have many changes
+#
+#   * Written by [Corey Haines](http://coreyhaines.com/)
+#   * Scriptified by Gary Bernhardt
+#   * Obtained from https://github.com/garybernhardt/dotfiles/blob/main/bin/git-churn
+#   * Edited for GitAlias.com repo by Joel Parker Henderson
+#   * Comments by Mislav http://mislav.uniqpath.com/2014/02/hidden-documentation/
+#
+# Show churn for whole repo:
+#
+#   $ git churn
+#
+# Show churn for specific directories:
+#
+#   $ git churn app lib
+#
+# Show churn for a time range:
+#
+#   $ git churn --since=1-month-ago
+#
+# These are all standard arguments to `git log`.
+#
+# It's possible to get valuable insight from history of a project not only
+# by viewing individual commits, but by analyzing sets of changes as a whole.
+# For instance, `git churn` compiles stats about which files change the most.
+#
+# For example, to see where work on an app was focused on in the past month:
+#
+#     $ git churn --since=1-month-ago app/ | tail
+#
+# This can also highlight potential problems with technical debt in a project.
+# A specific file changing too often is generally a red flag, since it probably
+# means the file either needed to be frequently fixed for bugs, or the file
+# holds too much responsibility and should be split into smaller units.
+#
+# Similar methods of history analysis can be employed to see which people were
+# responsible recently for development of a certain part of the codebase.
+#
+# For instance, to see who contributed most to the API part of an application:
+#
+#    $ git log --format='%an' --since=1-month-ago app/controllers/api/ | \
+#      sort | uniq -c | sort -rn | head
+#
+#    109 Alice Anderson
+#    13 Bob Brown
+#    7 Carol Clark
+#
+churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
+
+# summary: print a helpful summary of some typical metrics
+summary = "!f() { \
+  printf \"Summary of this branch...\n\"; \
+  printf \"%s\n\" $(git rev-parse --abbrev-ref HEAD); \
+  printf \"%s first commit timestamp\n\" $(git log --date-order --format=%cI | tail -1); \
+  printf \"%s last commit timestamp\n\" $(git log -1 --date-order --format=%cI); \
+  printf \"\nSummary of counts...\n\"; \
+  printf \"%d commit count\n\" $(git rev-list --count HEAD); \
+  printf \"%d date count\n\" $(git log --format=oneline --format=\"%ad\" --date=format:\"%Y-%m-%d\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+  printf \"%d tag count\n\" $(git tag | wc -l); \
+  printf \"%d author count\n\" $(git log --format=oneline --format=\"%aE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+  printf \"%d committer count\n\" $(git log --format=oneline --format=\"%cE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+  printf \"%d local branch count\n\" $(git branch | grep -v \" -> \" | wc -l); \
+  printf \"%d remote branch count\n\" $(git branch -r | grep -v \" -> \" | wc -l); \
+  printf \"\nSummary of this directory...\n\"; \
+  printf \"%s\n\" $(pwd); \
+  printf \"%d file count via git ls-files\n\" $(git ls-files | wc -l); \
+  printf \"%d file count via find command\n\" $(find . | wc -l); \
+  printf \"%d disk usage\n\" $(du -s | awk '{print $1}'); \
+  printf \"\nMost-active authors, with commit count and %%...\n\"; git log-of-count-and-email | head -7; \
+  printf \"\nMost-active dates, with commit count and %%...\n\"; git log-of-count-and-day | head -7; \
+  printf \"\nMost-active files, with churn count\n\"; git churn | head -7; \
+}; f"
+
+# Show the commit's parents
+commit-parents = !"f(){ git cat-file -p \"${*:-HEAD}\" | gsed -n '/0/,/^ *$/{/^parent /p}'; };f"
+
+# Is the commit a merge commit? If yes exit 0, else exit 1
+commit-is-merge = !"f(){ [ -n \"$(git commit-parents \"$*\" | gsed '0,/^parent /d')\" ];};f"
+
+# Initialize a repo and immediately add an empty rebaseable commit.
+# This initialization makes it easier to do later git rebase commands,
+# because it enables a rebase to go all the way back to the first commit.
+init-empty = !"f() { git init && git commit --allow-empty --allow-empty-message --message ''; }; f"
+
+# Stash snapshot - from http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/
+# Take a snapshot of your current working tree without removing changes.
+# This is handy for refactoring where you can't quite fit what you've done
+# into a commit but daren't stray too far from now without a backup.
+#
+# Running this:
+#
+#    $ git snapshot
+#
+# Creates this stash:
+#
+#    stash@{0}: On feature/handy-git-tricks: snapshot: Mon Apr 8 12:39:06 BST 2013
+#
+# And seemingly no changes to your working tree.
+#
+snapshot = !git stash push --include-untracked --message \"snapshot: $(date)\" && git stash apply \"stash@{0}\"
+
+# Expunge a file everywhere; this command is typically for a serious problem,
+# such as accidentally committing a file of sensitive data, such as passwords.
+# After you use command, you will likely need to force push everything.
+# See https://help.github.com/articles/removing-sensitive-data-from-a-repository/
+expunge = !"f() { git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all }; f"
+
+# Show logs of unreachable commits.
+# This can be useful, for example, when recovering contents of dropped stashes or reset commits.
+show-unreachable = !"git fsck --unreachable | grep commit | cut -d\" \" -f3 | xargs git log"
+
+# Work In Progress - Easy tracking of what you're doing
+#
+# From https://gist.github.com/492227 and VonC on stackoverflow.
+#
+# This enables a quick way to add all new and modified files to the index,
+# while cleaning the index from the files removed from the working tree;
+# this cleaning will facilitate a rebase, because there won't be any conflict
+# due to an "unclean" working directory (not in sync with the index).
+
+# Add files using the message "wip"
+wip = !"git add --all; git ls-files --deleted -z | xargs -r -0 git rm; git commit --message=wip"
+
+# Restore the deleted files to the working tree.
+unwip = !"git log -n 1 | grep -q -c wip && git reset HEAD~1"
+
+# Publish the current branch by pushing it to the remote "origin",
+# and setting the current branch to track the upstream branch.
+publish = !"git push --set-upstream origin $(git current-branch)"
+
+# Unpublish the current branch by deleting the
+# remote version of the current branch.
+unpublish = !"git push origin :$(git current-branch)"
+
+top = rev-parse --show-toplevel
+
+# pruner: prune everything that is unreachable now.
+#
+# This command takes a long time to run, perhaps even overnight.
+#
+# This is useful for removing unreachable objects from all places.
+#
+# By [CodeGnome](http://www.codegnome.com/)
+#
+pruner = !"git prune --expire=now; git reflog expire --expire-unreachable=now --rewrite --all"
+
+# repacker: repack a repo the way Linus recommends.
+#
+# This command takes a long time to run, perhaps even overnight.
+#
+# It does the equivalent of "git gc --aggressive"
+# but done *properly*,  which is to do something like:
+#
+#     git repack -a -d --depth=250 --window=250
+#
+# The depth setting is about how deep the delta chains can be;
+# make them longer for old history - it's worth the space overhead.
+#
+# The window setting is about how big an object window we want
+# each delta candidate to scan.
+#
+# And here, you might well want to add the "-f" flag (which is
+# the "drop all old deltas", since you now are actually trying
+# to make sure that this one actually finds good candidates.
+#
+# And then it's going to take forever and a day (ie a "do it overnight"
+# thing). But the end result is that everybody downstream from that
+# repository will get much better packs, without having to spend any effort
+# on it themselves.
+#
+# http://metalinguist.wordpress.com/2007/12/06/the-woes-of-git-gc-aggressive-and-how-git-deltas-work/
+#
+# We also add the --window-memory limit of 1 gig, which helps protect
+# us from a window that has very large objects such as binary blobs.
+#
+repacker = repack -a -d -f --depth=300 --window=300 --window-memory=1g
+
+# Do everything we can to optimize the repository.
+#
+# This command takes a long time to run, perhaps even overnight.
+#
+# Currently, this command simply calls `git pruner` and `git repacker`,
+# then one step (that may be unnecessary) calling `git prune-packed`.
+#
+optimizer = !git pruner; git repacker; git prune-packed
+
+
+# Search for a given string in all patches and print commit messages.
+#
+# Example: search for any commit that adds or removes string "foobar"
+#
+#     git search-commits foobar
+#
+# Example: search commits for string "foobar" in directory src/lib
+#
+#     git search-commits foobar src/lib
+#
+# Example: search commits for "foobar", print full diff of commit with 1 line context
+#
+#     git search-commits foobar --pickaxe-all -U1 src/lib
+#
+# Posted by Mikko Rantalainen on StackOverflow.
+#
+search-commits = !"f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""
+
+# git diff-chunk - Get the diff of one chunk.
+#
+# Suppose we want to see just the differences of one chunk,
+# such as one function, in one file, in two different commits.
+#
+# This alias creates two temp files which contain only the chunk,
+# then does a typical git diff.
+#
+# Syntax:
+#
+#     git diff-chunk <old-rev> <new-rev> <path> <chunk pattern>
+#
+diff-chunk = "!f() { \
+  git show \"$1:$3\" | sed -n \"/^[^ \t].*$4(/,/^}/p\" > .tmp1 ; \
+  git show \"$2:$3\" | sed -n \"/^[^ \t].*$4(/,/^}/p\" > .tmp2 ; \
+  git diff --no-index .tmp1 .tmp2 ; \
+}; f"
+
+# Use graphviz for display.
+# This produces output that can be displayed using dotty, for example:
+#   $ git graphviz HEAD~100..HEAD~60 | dotty /dev/stdin
+#   $ git graphviz --first-parent main | dotty /dev/stdin
+# git graphiz --first-parent main | bcat
+graphviz = !"f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
+
+fzfixup  = "!f() { git log --pretty=oneline -n 100 | fzf | awk '{ print $1 }' | xargs git fixup ; }; f"

@@ -1,3 +1,5 @@
+# -*- mode: gitconfig; -*-
+# vim: set filetype=gitconfig:
 [user]
   name = Kevin Buley
   email = kevin@buley.org
@@ -11,7 +13,7 @@
   logallrefupdates = true
   ignorecase = true
   precomposeunicode = true
-  pager = less -F 
+  pager = less -F
   abbrev = 8
   quotePath = false
   untrackedCache = true
@@ -52,9 +54,10 @@
 [difftool "nvim"]
   cmd = nvim -d "$LOCAL" "$REMOTE"
 [difftool "difft"]
-  cmd = difft "$LOCAL" "$REMOTE"
+  cmd = difft --display side-by-side-show-both "$LOCAL" "$REMOTE"
 [merge]
   ff = only
+  tool = nvim
 [mergetool]
   keepBackup = false
   prompt = false
@@ -86,29 +89,6 @@
   abbrevcommit = yes
 [safe]
   directory = /workspace
-[alias]
-  rank = "shortlog -s -n --no-merges"
-  last = log -1 --stat
-  cp = cherry-pick
-  co = checkout
-  cl = clone
-  ci = commit
-  st = status -sb
-  br = branch
-  unstage = reset HEAD --
-  dc = diff --cached
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %Cblue<%an>%Creset' --date=relative
-  taglog = log --tags --no-walk --date=iso-local --pretty='%C(auto)%h %cd%d %s'
-  get = pull --verbose --progress --tags --prune
-  up = pull --rebase --autostash --verbose --progress --tags --prune
-  testmerge = merge --no-commit --no-ff
-  branch-prune = "!git branch -vv && git fetch -p && for b in $(git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads); do git branch -D $b; done"
-  add-archive = "!git update-ref refs/archive/$(date '+%Y%m%d-%s')"
-  list-archive = for-each-ref --sort=-authordate --format='%(refname) %(objectname:short) %(contents:subject)' refs/archive/
-  worktree-clone = "!sh $XDG_CONFIG_HOME/git/git-worktree-clone"
-  checkout-worktree = "!git branch -vv && git fetch -p && for b in $(git for-each-ref --format='%(refname:short)' refs/heads); do git worktree add -f $b; done"
-  difft = --paginate difftool --tool=difft
-  nvim = mergetool --tool=nvim
 [rebase]
   autostash = true
   autoSquash = true
@@ -127,6 +107,9 @@
   lineNumber = true
 [notes]
   rewriteRef = refs/notes/commits
+[notes "rewrite"]
+  amend = true
+  rebase = true
 [rerere]
   autoUpdate = true
   enabled = true
@@ -143,3 +126,6 @@
   insteadOf = gh
 [fetch "fsck"]
   zeroPaddedFilemode = warn
+[include]
+  path = alias
+

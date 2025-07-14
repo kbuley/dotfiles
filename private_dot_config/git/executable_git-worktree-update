@@ -1,0 +1,89 @@
+#!/bin/bash
+shopt -s extglob
+
+# Start from the current directory and move up through parent directories
+git_root=$(pwd)
+
+while [ "$git_root" != "/" ]; do
+	if [ -e "$git_root/.bare" ]; then
+		echo "Found root at: $git_root"
+		break
+	fi
+	git_root=$(dirname "$git_root")
+done
+
+if [ "$git_root" == "/" ]; then
+	echo "You are not in a bare worktree."
+	exit 1
+fi
+
+git -C "$git_root" fetch --prune -up --tags --force origin
+
+git for-each-ref --format='%(refname:short)' 'refs/remotes/origin/' |
+	while read -r remote_branch; do
+		# Remove 'origin/' prefix and handle special characters
+		branch_name="${remote_branch#origin/}"
+
+		# Skip HEAD reference
+		[[ "$branch_name" == "HEAD" ]] && continue
+
+		# Skip origin branch
+		[[ "$branch_name" == "origin" ]] && continue
+
+		# Check if worktree already exists
+		if ! [ -d "$git_root/$branch_name" ]; then
+			echo "Adding worktree for: $branch_name"
+			git worktree add -f "$git_root/$branch_name" "$branch_name"
+		fi
+	done
+
+git worktree list | grep -v '.bare' | awk '{print $1}' | while read -r worktree_path; do
+	branch_name=$(
+		unset GIT_DIR GIT_WORK_TREE
+		git -C "$worktree_path" branch --show-current
+	)
+
+	echo -n "Checking $branch_name: "
+
+	# Skip detached HEADs
+	[ -z "$branch_name" ] && {
+		echo "skipped (detached HEAD, $worktree_path)"
+		continue
+	}
+
+	# Check if remote branch exists
+	if ! git ls-remote --exit-code --heads origin "$branch_name" >/dev/null 2>&1; then
+		# Verify clean worktree
+		if [[ -z $(
+			unset GIT_DIR GIT_WORK_TREE
+			git -C "$worktree_path" status --porcelain
+		) ]]; then
+			echo "removed (no remote, clean worktree)"
+			git worktree remove -f "$worktree_path"
+			git branch -D "$branch_name"
+			continue
+		else
+			echo "skipped (dirty worktree)"
+		fi
+	else
+		# Fetch explicitly for this branch's remote
+		git -C "$worktree_path" fetch origin "$branch_name" >/dev/null 2>&1
+
+		# Compare local vs remote
+		LOCAL=$(
+			unset GIT_DIR GIT_WORK_TREE
+			git -C "$worktree_path" rev-parse "@"
+		)
+		REMOTE=$(
+			unset GIT_DIR GIT_WORK_TREE
+			git -C "$worktree_path" rev-parse "@{u}"
+		)
+
+		if [ "$LOCAL" = "$REMOTE" ]; then
+			echo " Up-to-date"
+		else
+			unset GIT_DIR GIT_WORK_TREE
+			git -C "$worktree_path" pull --rebase
+		fi
+	fi
+done

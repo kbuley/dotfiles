@@ -30,5 +30,36 @@ echo "gitdir: ./.bare" >.git
 # Explicitly sets the remote origin fetch so we can fetch remote branches
 git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 
+# We want to sync tags and notes, too
+git config --add remote.origin.fetch "refs/notes/*:refs/notes/*"
+git config --add remote.origin.fetch "refs/tags/*:refs/tags/*"
+git config --add remote.origin.push "refs/notes/*:refs/notes/*"
+git config --add remote.origin.push "refs/tags/*:refs/tags/*"
+
+# Tweak displayRef
+git config notes.displayRef "refs/notes/*"
+
+# Make sure rebasing notes works
+git config notes.rewriteRef "refs/notes/*"
+
 # Gets all branches from origin
 git fetch origin
+
+# Set up the worktrees
+git for-each-ref --format='%(refname:short)' 'refs/remotes/origin/' |
+	while read -r remote_branch; do
+		# Remove 'origin/' prefix and handle special characters
+		branch_name="${remote_branch#origin/}"
+
+		# Skip HEAD reference
+		[[ "$branch_name" == "HEAD" ]] && continue
+
+		# Skip origin branch
+		[[ "$branch_name" == "origin" ]] && continue
+
+		# Set the upstreams
+		git branch --set-upstream-to=origin/"$branch_name" "$branch_name"
+
+		git worktree add -f "$branch_name" "$branch_name"
+		echo "Worktree added for branch: $branch_name"
+	done

@@ -1,0 +1,25 @@
+#!/bin/bash
+shopt -s extglob
+
+# Start from the current directory and move up through parent directories
+git_root=$(pwd)
+
+while [ "$git_root" != "/" ]; do
+	if [ -e "$git_root/.bare" ]; then
+		echo "Found root at: $git_root"
+		break
+	fi
+	git_root=$(dirname "$git_root")
+done
+
+if [ "$git_root" == "/" ]; then
+	echo "You are not in a bare worktree."
+	exit 1
+fi
+
+git worktree add -b "$1" "$git_root/$1" "$2"
+git push --set-upstream origin "$1":"$1"
+# git branch --set-upstream-to=origin/"$1" "$1"
+# git push origin "$1":"$1"
+#git update-ref refs/remotes/origin/"$1" "$(git -C "$git_root/$1" rev-parse HEAD)"
+#git -C "$git_root/$1" branch --set-upstream-to origin/"$1"

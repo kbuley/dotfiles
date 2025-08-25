@@ -83,6 +83,7 @@
   defaultBranch = main
 [branch]
   autosetuprebase = always
+  sort = -committerdate
 [http]
   sslVerify = true
 [log]
@@ -119,13 +120,18 @@
   showUntrackedFiles = all
 [tag]
   gpgSign = true
-  sort = version:refname
+  sort = -version:refname
 [transfer]
   fsckObjects = true
 [url "https://github.com/"]
   insteadOf = gh
 [fetch "fsck"]
   zeroPaddedFilemode = warn
+[column]
+  ui = auto
+[maintenance]
+  auto = true
+  strategy = incremental
 [include]
   path = alias
 

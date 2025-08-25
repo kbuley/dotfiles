@@ -1,3 +1,4 @@
+{{- $chezmoi := dict "mode" 0600 -}}
 {{- if hasKey . "github_username" -}}
 {{ range gitHubKeys .github_username -}}
 {{   .Key }}

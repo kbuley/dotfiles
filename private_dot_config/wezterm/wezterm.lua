@@ -17,7 +17,7 @@ config.color_scheme = "catppuccin-mocha"
 config.font_size = 12.0
 
 config.window_frame = {
-	font = wezterm.font({ family = "FiraCode Nerd Font", weight = "Regular" }),
+	font = wezterm.font({ family = "FiraCode Nerd Font" }),
 }
 
 -- Set coloring for inactive panes to be less bright than your active pane

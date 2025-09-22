@@ -1,9 +1,9 @@
-zmodule ohmyzsh/ohmyzsh --root plugins/kubectl
-zmodule ohmyzsh/ohmyzsh --root plugins/kubectx
-zmodule ohmyzsh/ohmyzsh --root plugins/tmuxinator
+#   zmodule ohmyzsh/ohmyzsh --root plugins/kubectl
+#   zmodule ohmyzsh/ohmyzsh --root plugins/kubectx
+#   zmodule ohmyzsh/ohmyzsh --root plugins/tmuxinator
 zmodule ohmyzsh/ohmyzsh --root plugins/brew
-# zmodule ohmyzsh/ohmyzsh --root plugins/docker
-# zmodule ohmyzsh/ohmyzsh --root plugins/docker-compose
+#   zmodule ohmyzsh/ohmyzsh --root plugins/docker
+#   zmodule ohmyzsh/ohmyzsh --root plugins/docker-compose
 zmodule ohmyzsh/ohmyzsh --root plugins/git
 zmodule ohmyzsh/ohmyzsh --root plugins/gitfast
 zmodule ohmyzsh/ohmyzsh --root plugins/fzf
@@ -13,13 +13,13 @@ zmodule ohmyzsh/ohmyzsh --root plugins/gpg-agent
 zmodule ohmyzsh/ohmyzsh --root plugins/tmux
 zmodule ohmyzsh/ohmyzsh --root plugins/copybuffer
 zmodule mattmc3/zshrc.d
-# zmodule supercrabtree/k
-zmodule reegnz/jq-zsh-plugin
+#   zmodule supercrabtree/k
 zmodule jonmosco/kube-ps1
 zmodule romkatv/powerlevel10k --use degit
 zmodule zsh-users/zsh-completions --fpath src
-zmodule completion
+#   zmodule completion
 zmodule zsh-users/zsh-history-substring-search
 zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-autosuggestions
-
+zmodule exa
+zmodule direnv

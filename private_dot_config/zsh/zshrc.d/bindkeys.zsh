@@ -8,3 +8,6 @@ bindkey "^[[H" beginning-of-line                # Key Home
 bindkey "^[[F" end-of-line                      # Key End
 bindkey "^[[1;2C" forward-word	                # Shift right-arrow
 bindkey "^[[1;2D" backward-word                 # Shift left-arrow
+
+bindkey -v # Enable vim mode
+

@@ -1,5 +1,6 @@
 {
   "auths": {},
   "credsStore": "osxkeychain",
-  "cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"]
+  "cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"],
+  "default-context": "default"
 }

@@ -1,25 +1,108 @@
 #!/bin/bash
-shopt -s extglob
+# shopt -s extglob
+#
+# # Start from the current directory and move up through parent directories
+# git_root=$(pwd)
+#
+# while [ "$git_root" != "/" ]; do
+# 	if [ -e "$git_root/.bare" ]; then
+# 		echo "Found root at: $git_root"
+# 		break
+# 	fi
+# 	git_root=$(dirname "$git_root")
+# done
+#
+# if [ "$git_root" == "/" ]; then
+# 	echo "You are not in a bare worktree."
+# 	exit 1
+# fi
+#
+# git worktree add -b "$1" "$git_root/$1" "$2"
+# # git push --set-upstream origin "$1":"$1"
+# git branch --set-upstream-to=origin/"$1"
+# # git push origin "$1":"$1"
+# #git update-ref refs/remotes/origin/"$1" "$(git -C "$git_root/$1" rev-parse HEAD)"
+# #git -C "$git_root/$1" branch --set-upstream-to origin/"$1"
+#!/bin/bash
+set -euo pipefail
 
-# Start from the current directory and move up through parent directories
-git_root=$(pwd)
+# Script to create a new branch and worktree from a parent branch
+# Usage: ./worktree-branch <branch-name> [parent-branch]
+# Default parent branch is 'main' if not specified
 
-while [ "$git_root" != "/" ]; do
-	if [ -e "$git_root/.bare" ]; then
-		echo "Found root at: $git_root"
-		break
-	fi
-	git_root=$(dirname "$git_root")
-done
+# Function to display usage information
+usage() {
+	echo "Usage: $0 <branch-name> [parent-branch]"
+	echo "  branch-name    Name of the new branch and worktree to create"
+	echo "  parent-branch  Parent branch to base the new branch on (defaults to 'main')"
+	echo ""
+	echo "Examples:"
+	echo "  $0 my-feature develop    # Create branch 'my-feature' based on 'develop'"
+	echo "  $0 my-feature           # Create branch 'my-feature' based on 'main'"
+	exit 1
+}
 
-if [ "$git_root" == "/" ]; then
-	echo "You are not in a bare worktree."
+# Function to find the bare repository root
+find_bare_repo_root() {
+	local current_dir="$PWD"
+
+	while [[ "$current_dir" != "/" ]]; do
+		if [[ -e "$current_dir/.bare" ]]; then
+			echo "$current_dir"
+			return 0
+		fi
+		current_dir="$(dirname "$current_dir")"
+	done
+
+	echo "Error: Not in a bare worktree repository" >&2
+	exit 1
+}
+
+# Check arguments
+if [[ $# -eq 0 ]] || [[ $# -gt 2 ]]; then
+	usage
+fi
+
+# Parse arguments
+branch_name="$1"
+parent_branch="${2:-main}"
+
+# Validate branch name
+if [[ -z "$branch_name" ]]; then
+	echo "Error: Branch name cannot be empty" >&2
 	exit 1
 fi
 
-git worktree add -b "$1" "$git_root/$1" "$2"
-git push --set-upstream origin "$1":"$1"
-# git branch --set-upstream-to=origin/"$1" "$1"
-# git push origin "$1":"$1"
-#git update-ref refs/remotes/origin/"$1" "$(git -C "$git_root/$1" rev-parse HEAD)"
-#git -C "$git_root/$1" branch --set-upstream-to origin/"$1"
+# Find the bare repository root
+echo "Searching for bare repository root..."
+git_root="$(find_bare_repo_root)"
+echo "Found bare repository root at: $git_root"
+
+# Check if branch already exists
+if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+	echo "Error: Branch '$branch_name' already exists" >&2
+	exit 1
+fi
+
+# Check if worktree directory already exists
+worktree_path="$git_root/$branch_name"
+if [[ -e "$worktree_path" ]]; then
+	echo "Error: Directory '$worktree_path' already exists" >&2
+	exit 1
+fi
+
+# Verify parent branch exists
+if ! git show-ref --verify --quiet "refs/heads/$parent_branch" &&
+	! git show-ref --verify --quiet "refs/remotes/origin/$parent_branch"; then
+	echo "Error: Parent branch '$parent_branch' does not exist" >&2
+	exit 1
+fi
+
+# Create the new branch and worktree
+echo "Creating new branch '$branch_name' based on '$parent_branch'..."
+if ! git worktree add -b "$branch_name" "$worktree_path" "$parent_branch"; then
+	echo "Error: Failed to create worktree" >&2
+	exit 1
+fi
+
+echo "Successfully created branch '$branch_name' and worktree at '$worktree_path'"

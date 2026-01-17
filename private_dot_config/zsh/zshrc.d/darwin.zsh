@@ -28,4 +28,5 @@ if [[ "$(uname)" = Darwin ]]; then
   fi
 fi
 
+eval "$(zoxide init zsh)"
 

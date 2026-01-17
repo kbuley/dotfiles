@@ -42,7 +42,7 @@ config.unix_domains = {
 
 -- Create a status bar on the top right that shows the current workspace and date
 wezterm.on("update-right-status", function(window, pane)
-	local date = wezterm.strftime(" %I:%M:%S %p  %A  %B %-d ")
+	local date = wezterm.strftime(" %I:%M:%S %p  %A  %B %-d ")
 
 	-- Make it italic and underlined
 	window:set_right_status(wezterm.format({
@@ -107,7 +107,19 @@ config.leader = { key = "b", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
 	-- restore ctrl-l functionality
-	{ key = "l", mods = "LEADER", action = wezterm.action.ResetTerminal },
+	{
+		key = "l",
+		mods = "LEADER",
+		action = wezterm.action_callback(function(win, pane)
+			if is_vim(pane) then
+				-- Send Neovim's redraw command
+				win:perform_action(wezterm.action.SendString(":redraw!\n"), pane)
+			else
+				-- Send Ctrl+L for other applications
+				win:perform_action(wezterm.action.SendKey({ key = "l", mods = "CTRL" }), pane)
+			end
+		end),
+	},
 	-- move between split panes
 	split_nav("move", "h"),
 	split_nav("move", "j"),
@@ -201,6 +213,9 @@ config.keys = {
 
 	-- Send ctrl-B to tmux
 	{ key = "b", mods = "LEADER|CTRL", action = wezterm.action.SendKey({ key = "b", mods = "CTRL" }) },
+
+	-- Shift-Enter for stuff like claude code
+	{ key = "Enter", mods = "SHIFT", action = wezterm.action({ SendString = "\x1b\r" }) },
 }
 -- Move tabs
 for i = 1, 8 do

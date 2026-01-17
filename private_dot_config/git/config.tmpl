@@ -62,7 +62,11 @@
   keepBackup = false
   prompt = false
 [mergetool "nvim"]
-  cmd = nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\"
+  #cmd = nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\"
+  #cmd = nvim -d -c "wincmd l" "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
+  cmd = nvim -d -c '4wincmd w | wincmd J' "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
+  prompt = false
+  keepBackup = false
 [mergetool "vscode"]
   cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 [gpg]
@@ -119,7 +123,7 @@
 [status]
   showUntrackedFiles = all
 [tag]
-  gpgSign = true
+  # gpgSign = true
   sort = -version:refname
 [transfer]
   fsckObjects = true
@@ -127,11 +131,14 @@
   insteadOf = gh
 [fetch "fsck"]
   zeroPaddedFilemode = warn
-[column]
-  ui = auto
 [maintenance]
   auto = true
   strategy = incremental
 [include]
   path = alias
+[advice]
+  setUpstreamFailure = false
+[alias]
+  pr = "!f() { exec az repos pr \"$@\"; }; f"
+  repo = "!f() { exec az repos \"$@\"; }; f"
 

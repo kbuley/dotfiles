@@ -1,5 +1,6 @@
-
-
+if [[ -z "$XDG_CACHE_HOME" && -f "${ZDOTDIR}/.zshenv" ]]; then
+    source "${ZDOTDIR}/.zshenv"
+fi
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -32,7 +33,6 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 # ------------------
 # Initialize modules
 # ------------------
-
 ZIM_HOME=${XDG_CACHE_HOME}/zim
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
@@ -100,8 +100,3 @@ fi
 if [ -x "$(command -v eza)" ]; then
   alias ls='eza --group-directories-first --icons'
 fi
-
-if [ -f "`which gh`" ]; then
-  eval "$(gh copilot alias -- zsh)"
-fi
-

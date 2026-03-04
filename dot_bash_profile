@@ -1,0 +1,10 @@
+# Redirect bash configuration to XDG-compliant location
+# (analogous to ~/.zshenv setting ZDOTDIR)
+
+# BASH_ENV is sourced by non-interactive bash (scripts, etc.)
+export BASH_ENV="$HOME/.config/bash/bashenv"
+
+# Source the real bash_profile from ~/.config/bash
+if [ -f "$HOME/.config/bash/bash_profile" ]; then
+  . "$HOME/.config/bash/bash_profile"
+fi

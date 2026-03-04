@@ -1,0 +1,459 @@
+# Debugging Prompt
+
+Use this prompt when asking AI assistants to help debug issues.
+
+## Prompt Template
+
+```
+Help me debug this issue following standards in .ai/context/AGENTS_[LANGUAGE].md:
+
+**Problem**: [Description]
+
+**Code**:
+[CODE]
+
+**Error/Behavior**:
+[ERROR MESSAGE OR UNEXPECTED BEHAVIOR]
+
+**Expected**:
+[WHAT SHOULD HAPPEN]
+
+**Context**:
+- Language version: [version]
+- Framework: [if applicable]
+- Environment: [dev/prod/etc]
+
+Provide:
+1. Root cause analysis
+2. Fix following AGENTS_*.md patterns
+3. Prevention strategy
+4. LazyVim debugging workflow (from EDITORS.md)
+```
+
+## Language-Specific Debugging
+
+### Go
+
+```
+Debug this Go issue:
+
+**Code**:
+[CODE]
+
+**Error**:
+[ERROR]
+
+Check against .ai/context/AGENTS_GO.md:
+- Is context being passed correctly?
+- Are interfaces being used properly?
+- Is error handling idiomatic?
+- Are there race conditions?
+- Is defer being used correctly?
+
+Show:
+- Root cause
+- Fix following patterns
+- How to debug in LazyVim with DAP
+```
+
+### Python
+
+```
+Debug this Python issue:
+
+**Code**:
+[CODE]
+
+**Error**:
+[ERROR]
+
+Check against .ai/context/AGENTS_PYTHON.md:
+- Are type hints correct (run mypy)?
+- Is async/await used properly?
+- Are there import issues?
+- Is Pydantic validation working?
+
+Show:
+- Root cause
+- Fix with proper type hints
+- How to debug in LazyVim with debugpy
+```
+
+### TypeScript/Vue
+
+```
+Debug this Vue/TypeScript issue:
+
+**Component/Code**:
+[CODE]
+
+**Error**:
+[ERROR]
+
+Check against .ai/context/AGENTS_TYPESCRIPT_VUE.md:
+- Are types correct?
+- Is Composition API used properly?
+- Are reactive refs working?
+- Are props/emits typed correctly?
+
+Show:
+- Root cause
+- Fix following patterns
+- Browser debugging workflow
+```
+
+### PowerShell
+
+```
+Debug this PowerShell issue:
+
+**Script**:
+[CODE]
+
+**Error**:
+[ERROR]
+
+Check against .ai/context/AGENTS_POWERSHELL.md:
+- Is error handling proper ($ErrorActionPreference)?
+- Is multi-subscription handled?
+- Is Graph API query correct?
+- Are variables scoped properly?
+
+Show:
+- Root cause
+- Fix following patterns
+- PowerShell debugging techniques
+```
+
+## Debugging Strategies
+
+### 1. Error Message Analysis
+
+```
+Analyze this error:
+
+[ERROR MESSAGE]
+
+Provide:
+1. What the error means
+2. Common causes
+3. How to fix following standards
+4. How to prevent
+```
+
+### 2. Unexpected Behavior
+
+```
+This code doesn't work as expected:
+
+**Code**:
+[CODE]
+
+**Expected**: [behavior]
+**Actual**: [behavior]
+
+Debug:
+1. Identify logic error
+2. Fix following AGENTS_*.md patterns
+3. Add test to catch this
+4. Show debugging steps in LazyVim
+```
+
+### 3. Performance Issues
+
+```
+This code is slow:
+
+[CODE]
+
+Profile and optimize following AGENTS_*.md:
+- Identify bottleneck
+- Show optimized version
+- Compare performance
+- Add benchmarks/tests
+```
+
+### 4. Type Errors
+
+```
+Getting type errors:
+
+[CODE]
+
+[TYPE ERROR]
+
+Fix type issues:
+- Make types correct (not 'any')
+- Follow strict typing from AGENTS_*.md
+- Show before/after
+- Run type checker
+```
+
+## LazyVim Debugging Workflows
+
+### Go with DAP
+
+```
+Debug this Go code in LazyVim:
+
+[CODE]
+
+Show me:
+1. How to set breakpoints (<leader>db)
+2. Start debugger (<leader>dc)
+3. Step through code (<leader>ds, <leader>di, <leader>do)
+4. Inspect variables
+5. Debug test (<leader>dT)
+
+Using config from .ai/context/EDITORS.md
+```
+
+### Python with debugpy
+
+```
+Debug this Python code in LazyVim:
+
+[CODE]
+
+Show me:
+1. Set breakpoint: `<leader>db`
+2. Start debug: `<leader>dc`
+3. Step over/into/out: `<leader>ds`, `<leader>di`, `<leader>do`
+4. Evaluate expressions
+5. Debug test: `<leader>td`
+
+Using setup from .ai/context/EDITORS.md
+```
+
+### TypeScript/Vue Browser Debugging
+
+```
+Debug this Vue component:
+
+[CODE]
+
+Show me:
+1. Chrome DevTools workflow
+2. Vue DevTools usage
+3. Breakpoint debugging
+4. Network inspection
+5. LazyVim integration
+```
+
+## Common Issues by Language
+
+### Go
+
+```
+Common Go issues to check:
+
+[CODE]
+
+Check:
+- Goroutine leaks (use context)
+- Channel deadlocks
+- Race conditions (run with -race)
+- Incorrect defer usage
+- Error shadowing
+- Interface nil vs concrete nil
+
+Fix following AGENTS_GO.md patterns.
+```
+
+### Python
+
+```
+Common Python issues to check:
+
+[CODE]
+
+Check:
+- Import errors (relative vs absolute)
+- Type mismatches (run mypy)
+- Async/sync mixing
+- Mutable default arguments
+- Generator exhaustion
+- Context manager not used
+
+Fix following AGENTS_PYTHON.md patterns.
+```
+
+### TypeScript/Vue
+
+```
+Common Vue issues to check:
+
+[CODE]
+
+Check:
+- Reactivity loss (need ref/reactive)
+- Props mutation (should emit)
+- Async data loading (need suspense?)
+- Type assertions (avoid 'as any')
+- Lifecycle hook order
+- Component not registered
+
+Fix following AGENTS_TYPESCRIPT_VUE.md patterns.
+```
+
+### PowerShell
+
+```
+Common PowerShell issues to check:
+
+[CODE]
+
+Check:
+- Variable scoping ($script: vs $local:)
+- Error handling ($ErrorActionPreference)
+- Pipeline issues
+- Azure session expiration
+- Rate limiting on Graph API
+- Unescaped special characters
+
+Fix following AGENTS_POWERSHELL.md patterns.
+```
+
+## Systematic Debugging Approach
+
+### Step 1: Reproduce
+
+```
+Help me reproduce this issue:
+
+**Issue**: [Description]
+
+Create minimal reproducible example:
+- Simplest code that shows the bug
+- Clear steps to reproduce
+- Expected vs actual behavior
+```
+
+### Step 2: Isolate
+
+```
+Isolate the problem in this code:
+
+[CODE]
+
+Binary search approach:
+- Comment out sections
+- Add logging
+- Identify exact failure point
+```
+
+### Step 3: Fix
+
+```
+Now fix the isolated issue:
+
+[MINIMAL FAILING CODE]
+
+Provide:
+- Root cause
+- Fix following standards
+- Verification test
+- Prevention strategy
+```
+
+## Testing After Fix
+
+```
+Fixed the bug:
+
+**Before**:
+[BUGGY CODE]
+
+**After**:
+[FIXED CODE]
+
+Now provide:
+- Test that would have caught this
+- Regression test
+- Edge cases to test
+- Following test patterns from AGENTS_*.md
+```
+
+## Production Debugging
+
+```
+Debug production issue:
+
+**Symptoms**: [What users see]
+**Logs**: [Relevant logs]
+**Metrics**: [If available]
+
+Provide:
+1. Likely root cause
+2. Fix (following standards)
+3. How to safely deploy
+4. Monitoring to add
+5. Prevention strategy
+```
+
+## Output Format
+
+````markdown
+## Root Cause
+
+[Clear explanation of the problem]
+
+## Fix
+
+```[language]
+[Fixed code following standards]
+```
+````
+
+## Why This Works
+
+[Explanation]
+
+## Test
+
+```[language]
+[Test to prevent regression]
+```
+
+## LazyVim Debugging
+
+1. Set breakpoint: `<leader>db`
+2. Start debugger: `<leader>dc`
+3. Inspect: [specific steps]
+
+## Prevention
+
+- [How to avoid in future]
+
+```
+
+## Tips
+
+- **Provide context**: Error messages, environment, versions
+- **Show attempts**: What you've already tried
+- **Be specific**: Exact error messages, not summaries
+- **Include tests**: Ask for regression tests
+- **Get LazyVim help**: Learn debugging workflow
+
+## Example Session
+
+```
+
+User: "Getting 'cannot assign to x' error in Go"
+
+[code with error]
+
+AI: [Analyzes against AGENTS_GO.md]
+
+1. Identifies pointer issue
+2. Shows fix with proper interface
+3. Explains Go pointer semantics
+4. Provides test
+5. Shows LazyVim DAP workflow
+
+```
+
+## Version History
+
+- 2024-01-24: Initial version
+```

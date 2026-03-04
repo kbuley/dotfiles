@@ -1,0 +1,18 @@
+# Login shell configuration for bash
+# Analogous to ~/.config/zsh/.zprofile + login portions of .zshrc
+
+# Source environment variables first
+if [ -f "$HOME/.config/bash/bashenv" ]; then
+  . "$HOME/.config/bash/bashenv"
+fi
+
+# macOS launchctl environment (from .zprofile)
+if [[ "$(uname)" = Darwin ]]; then
+  launchctl setenv OLLAMA_MAX_LOADED_MODELS "3"
+  launchctl setenv OLLAMA_NUM_PARALLEL "2"
+fi
+
+# Source bashrc for interactive login shells
+if [[ $- == *i* ]] && [ -f "$HOME/.config/bash/bashrc" ]; then
+  . "$HOME/.config/bash/bashrc"
+fi

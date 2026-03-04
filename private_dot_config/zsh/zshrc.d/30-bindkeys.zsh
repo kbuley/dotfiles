@@ -30,12 +30,6 @@ bindkey -M vicmd "^[[1;2D" backward-word         # Shift+Left
 bindkey -M vicmd '/' history-incremental-search-backward
 bindkey -M vicmd '?' history-incremental-search-forward
 
-# Have Page Up/Down do start/end of line instead of buffer
-bindkey "^[[5~" beginning-of-line-hist
-bindkey "^[[6~" end-of-line-hist
-bindkey -M vicmd "^[[5~" beginning-of-line-hist
-bindkey -M vicmd "^[[6~" end-of-line-hist
-
 # Make backspace work in normal mode
 bindkey -M vicmd "^?" backward-delete-char
 

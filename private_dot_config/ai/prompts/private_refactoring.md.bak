@@ -1,0 +1,296 @@
+# Refactoring Prompt
+
+Use this prompt when asking AI assistants to refactor code to meet standards.
+
+## Prompt Template
+
+```
+Refactor this code to follow the patterns in .ai/context/AGENTS_[LANGUAGE].md:
+
+[PASTE CODE HERE]
+
+Requirements:
+1. Follow all patterns from AGENTS_*.md
+2. Maintain backward compatibility (or note breaking changes)
+3. Add/update tests
+4. Update documentation
+5. Use LazyVim conventions from .ai/context/EDITORS.md
+
+Provide:
+- Refactored code
+- Explanation of changes
+- Migration guide (if breaking)
+- Test updates
+```
+
+## Language-Specific Refactoring
+
+### Go - Accept Interfaces, Return Concrete
+
+```
+Refactor this Go code to accept interfaces and return concrete types:
+
+[CODE]
+
+Follow .ai/context/AGENTS_GO.md patterns:
+- Create minimal interfaces
+- Return concrete structs
+- Add functional options if 3+ parameters
+- Use table-driven tests
+```
+
+**Example**:
+
+```go
+// Before
+func NewService(db *sql.DB, cache *redis.Client, logger *zap.Logger) *Service
+
+// After (following standards)
+type Database interface {
+    Query(ctx context.Context, query string, args ...any) (*sql.Rows, error)
+}
+
+func NewService(db Database, opts ...Option) *Service
+```
+
+### Python - Add Type Hints
+
+```
+Add complete type hints to this Python code following .ai/context/AGENTS_PYTHON.md:
+
+[CODE]
+
+Requirements:
+- Pass mypy strict mode
+- Use Pydantic for validation
+- Add docstrings with types
+- Convert to async if doing I/O
+```
+
+**Example**:
+
+```python
+# Before
+def process_items(items):
+    return [x * 2 for x in items]
+
+# After (following standards)
+def process_items(items: list[int]) -> list[int]:
+    """Double each item in the list.
+
+    Args:
+        items: List of integers to process
+
+    Returns:
+        List of doubled integers
+    """
+    return [x * 2 for x in items]
+```
+
+### TypeScript/Vue - Convert to Composition API
+
+```
+Convert this Vue component to Composition API following .ai/context/AGENTS_TYPESCRIPT_VUE.md:
+
+[CODE]
+
+Requirements:
+- Use <script setup lang="ts">
+- Explicit type annotations
+- defineProps/defineEmits with types
+- Extract reusable logic to composables
+```
+
+**Example**:
+
+```vue
+<!-- Before: Options API -->
+<script lang="ts">
+export default {
+  props: ["id"],
+  data() {
+    return { count: 0 };
+  },
+};
+</script>
+
+<!-- After: Composition API (following standards) -->
+<script setup lang="ts">
+interface Props {
+  id: string;
+}
+
+const props = defineProps<Props>();
+const count = ref<number>(0);
+</script>
+```
+
+### PowerShell - Use Graph API
+
+```
+Refactor this PowerShell script to use Graph API instead of loops:
+
+[CODE]
+
+Follow .ai/context/AGENTS_POWERSHELL.md:
+- Replace Get-Az* loops with Search-AzGraph
+- Handle multi-subscription by default
+- Add proper error handling
+- Use approved verbs
+```
+
+**Example**:
+
+```powershell
+# Before (slow, multiple API calls)
+$vms = @()
+Get-AzSubscription | ForEach-Object {
+    Set-AzContext -Subscription $_.Id
+    $vms += Get-AzVM
+}
+
+# After (fast, single Graph query - following standards)
+$query = "Resources | where type =~ 'Microsoft.Compute/virtualMachines'"
+$vms = Search-AzGraph -Query $query -First 1000
+```
+
+## Step-by-Step Refactoring
+
+### 1. Small Changes
+
+```
+Make minimal changes to align with standards:
+- Add type hints
+- Fix naming conventions
+- Add error handling
+- Update imports
+
+Keep the structure the same.
+```
+
+### 2. Medium Changes
+
+```
+Restructure to follow patterns:
+- Extract interfaces (Go)
+- Convert to Composition API (Vue)
+- Add Pydantic models (Python)
+- Replace loops with Graph API (PowerShell)
+
+May require test updates.
+```
+
+### 3. Large Changes
+
+```
+Complete rewrite following all standards:
+- Full type safety
+- All patterns implemented
+- Comprehensive tests
+- Complete documentation
+- LazyVim snippets for common operations
+
+Provide migration guide.
+```
+
+## Testing After Refactoring
+
+```
+After refactoring, update tests following .ai/context/AGENTS_[LANGUAGE].md:
+
+Original code:
+[OLD CODE]
+
+Refactored code:
+[NEW CODE]
+
+Provide:
+1. Updated test cases
+2. New edge case tests
+3. Performance comparison (if relevant)
+4. Migration guide for callers
+```
+
+## LazyVim Workflow
+
+```
+I'm refactoring in LazyVim. Show me:
+1. Keybindings to help (from .ai/context/EDITORS.md)
+2. Snippets I can use
+3. LSP actions available
+4. Which-key commands
+
+For this refactoring:
+[CODE]
+```
+
+## Incremental Refactoring
+
+For large codebases:
+
+```
+Create a refactoring plan for this codebase to meet standards:
+
+[DESCRIBE CODEBASE]
+
+Provide:
+1. Priority order (what to refactor first)
+2. Breaking vs non-breaking changes
+3. Estimated effort
+4. Rollback strategy
+5. Step-by-step plan
+```
+
+## Output Format
+
+```markdown
+## Refactored Code
+
+[Complete refactored code]
+
+## Changes Made
+
+1. [Change description]
+2. [Change description]
+
+## Breaking Changes
+
+- [List any breaking changes]
+- [Migration instructions]
+
+## Tests
+
+[Updated/new tests]
+
+## LazyVim Tips
+
+- Use `<leader>ca` for [specific action]
+- Snippet: `[snippet name]`
+```
+
+## Tips
+
+- **Start small**: Refactor one function/component at a time
+- **Test first**: Update tests before refactoring
+- **Reference standards**: Be specific about which pattern
+- **Ask for steps**: "Break this into 3 refactoring steps"
+- **Get LazyVim help**: "What keybindings help with this refactoring?"
+
+## Example Session
+
+```
+User: "Refactor this Go function to accept interfaces"
+
+[code]
+
+AI: [Analyzes against AGENTS_GO.md]
+1. Creates Repository interface
+2. Updates NewService signature
+3. Shows functional options pattern
+4. Updates tests
+5. Suggests LazyVim workflow
+```
+
+## Version History
+
+- 2024-01-24: Initial version

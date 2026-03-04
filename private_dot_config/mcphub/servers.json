@@ -1,4 +1,39 @@
 {
+  "mcpServers": {
+    "AZ": {
+      "args": [
+        "-y",
+        "@azure/mcp@latest",
+        "server",
+        "start"
+      ],
+      "command": "npx",
+      "env": {
+        "AZURE_CLIENT_ID": "kbuley@catmktg.com",
+        "AZURE_TENANT_ID": "2eddc39c-2996-4c2a-ab97-f767c39ea155"
+      }
+    },
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/kbuley/Projects/"
+      ],
+      "autoApprove": [
+        "get_file_info",
+        "list_allowed_directories",
+        "list_directory",
+        "list_directory_with_sizes",
+        "read_file",
+        "read_media_file",
+        "read_multiple_files",
+        "read_text_file",
+        "search_files",
+        "directory_tree"
+      ],
+      "command": "npx"
+    }
+  },
   "nativeMCPServers": {
     "mcphub": {
       "disabled": false
@@ -17,20 +52,6 @@
         "edit_file"
       ],
       "disabled": false
-    }
-  },
-  "mcpServers": {
-    "zsmcp": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://zsmcp.catalina.com/mcp"]
-    },
-    "AZ": {
-      "args": ["-y", "@azure/mcp@latest", "server", "start"],
-      "command": "npx",
-      "env": {
-        "AZURE_CLIENT_ID": "kbuley@catmktg.com",
-        "AZURE_TENANT_ID": "2eddc39c-2996-4c2a-ab97-f767c39ea155"
-      }
     }
   }
 }

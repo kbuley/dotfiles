@@ -1,0 +1,126 @@
+# Code Review Prompt
+
+Use this prompt when asking AI assistants to review code.
+
+## Prompt Template
+
+```
+Please review this code following the standards in .ai/context/AGENTS_[LANGUAGE].md:
+
+[PASTE CODE HERE]
+
+Focus on:
+1. **Standards compliance**: Does it follow patterns from AGENTS_*.md?
+2. **Type safety**: Proper type annotations (Go, Python, TypeScript)?
+3. **Error handling**: Are errors handled properly?
+4. **Testing**: Are tests needed? Do they follow patterns?
+5. **Documentation**: Is it properly documented?
+6. **Performance**: Any obvious inefficiencies?
+7. **Security**: Any security concerns?
+
+For LazyVim users, suggest relevant keybindings from .ai/context/EDITORS.md.
+```
+
+## Language-Specific Reviews
+
+### Go
+
+```
+Review this Go code against .ai/context/AGENTS_GO.md:
+
+[CODE]
+
+Check:
+- Does it accept interfaces and return concrete types?
+- Are functional options used for 3+ optional parameters?
+- Is context passed properly?
+- Are tests table-driven with subtests?
+- Is error handling idiomatic?
+```
+
+### Python
+
+```
+Review this Python code against .ai/context/AGENTS_PYTHON.md:
+
+[CODE]
+
+Check:
+- Are type hints complete (mypy strict mode)?
+- Is it using uv for dependencies?
+- Is Pydantic used for validation?
+- Are async patterns correct?
+- Do tests follow pytest conventions?
+```
+
+### TypeScript/Vue
+
+```
+Review this Vue component against .ai/context/AGENTS_TYPESCRIPT_VUE.md:
+
+[CODE]
+
+Check:
+- Is it using Composition API with <script setup>?
+- Are TypeScript types explicit (no 'any')?
+- Are props/emits properly typed?
+- Is it following Vue 3 best practices?
+- Are composables used appropriately?
+```
+
+### PowerShell
+
+```
+Review this PowerShell script against .ai/context/AGENTS_POWERSHELL.md:
+
+[CODE]
+
+Check:
+- Does it handle multi-subscription by default?
+- Is it using Graph API instead of loops?
+- Is Azure session validated?
+- Are errors handled properly?
+- Is it following approved verb conventions?
+```
+
+## Example Usage
+
+```bash
+# In Claude.ai or other AI assistant
+"Please review this Go service following .ai/context/AGENTS_GO.md"
+
+[paste code]
+```
+
+## Tips
+
+- Reference specific sections: "Check against the 'Accept interfaces, return concrete' pattern"
+- Ask for specific feedback: "Focus on error handling and testing"
+- Request refactoring: "How would this look following our standards?"
+- Get LazyVim help: "What keybindings would help me refactor this?"
+
+## Output Format
+
+Ask the AI to structure feedback as:
+
+```markdown
+## Compliance Issues
+
+- [Issue description with line numbers]
+
+## Suggestions
+
+- [Improvement with example]
+
+## Approved
+
+- [What's already good]
+
+## Refactored Code
+
+[Improved version following standards]
+```
+
+## Version History
+
+- 2024-01-24: Initial version

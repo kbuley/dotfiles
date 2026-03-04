@@ -1,0 +1,391 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Translated from Powerlevel10k lean config.
+# Left  line 1:  os  dir  git
+# Left  line 2:  [tmux]  status  duration  jobs  direnv  envs  cloud  context  ❯
+
+# POWERLEVEL9K_PROMPT_ADD_NEWLINE=false
+add_newline = false
+command_timeout = 2000
+
+# ── Format ────────────────────────────────────────────────────
+
+format = """\
+$os\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status
+$custom\
+$status\
+$cmd_duration\
+$jobs\
+$direnv\
+$python\
+$conda\
+$golang\
+$nodejs\
+$ruby\
+$rust\
+$java\
+$dotnet\
+$php\
+$lua\
+$perl\
+$scala\
+$haskell\
+$kubernetes\
+$terraform\
+$aws\
+$azure\
+$gcloud\
+$username\
+$hostname\
+$character\
+"""
+
+right_format = ""
+
+# ── OS icon (POWERLEVEL9K_OS_ICON_FOREGROUND= → no color) ─────
+[os]
+disabled = false
+format = "[$symbol ]($style)"
+style = ""
+
+[os.symbols]
+Macos   = "\U000F0302"
+Linux   = "\U000F033D"
+Ubuntu  = "\U000F0548"
+Debian  = "\U000F0311"
+Fedora  = "\U000F030A"
+Windows = "\U000F05B3"
+
+# ── Directory ─────────────────────────────────────────────────
+# p10k: truncate_to_unique, shorten_dir_length=1, max_length=80
+# starship: truncate_to_repo is the closest equivalent;
+#           truncate_to_unique (show minimal unique prefix) is not supported.
+# POWERLEVEL9K_DIR_FOREGROUND=31
+# POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=103
+# POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=39, POWERLEVEL9K_DIR_ANCHOR_BOLD=true
+
+[directory]
+style                  = "31"
+truncation_length      = 3
+truncate_to_repo       = true
+truncation_symbol      = ""        # POWERLEVEL9K_SHORTEN_DELIMITER=
+before_repo_root_style = "103"
+repo_root_style        = "bold 39"
+read_only              = " \U000F033E"
+read_only_style        = "196"
+format           = "[$path]($style)[$read_only]($read_only_style) "
+repo_root_format = "[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+
+# ── Git branch ────────────────────────────────────────────────
+# POWERLEVEL9K_VCS_BRANCH_ICON='\uF126 '
+# POWERLEVEL9K_VCS_CLEAN_FOREGROUND=76
+
+[git_branch]
+symbol             = "\U000F062C "
+style              = "76"
+format             = "[$symbol$branch(:$remote_branch)]($style)"
+truncation_length  = 32
+truncation_symbol  = "\u2026"
+
+# ── Git tag (shown when HEAD is tagged, no branch) ────────────
+
+# ── Git commit / tag (shown when HEAD is detached) ────────────
+# tag_disabled=false: shows #tag when at a tagged commit, @sha otherwise
+
+[git_commit]
+style         = "76"
+format        = "[@$hash$tag]($style)"
+only_detached = true
+tag_disabled  = false
+tag_symbol    = " #"
+
+# ── Git state (REBASING, MERGING, CHERRY-PICKING, etc.) ───────
+# POWERLEVEL9K_VCS_ACTION → conflicted foreground 196
+
+[git_state]
+style  = "196"
+format = " [$state( $progress_current/$progress_total)]($style)"
+
+# ── Git status ────────────────────────────────────────────────
+# Colors per state:
+#   clean/ahead/behind → 76 (green)
+#   staged/unstaged    → 178 (yellow)
+#   untracked          → 39 (blue)
+#   conflicted         → 196 (red)
+#
+# Note: push-remote tracking (⇠⇢) is not supported in starship.
+# Note: WIP detection from commit message is not supported in starship.
+
+[git_status]
+format     = "$ahead$behind$diverged$stashed$conflicted$staged$modified$renamed$deleted$untracked "
+ahead      = "[ \u21E1$count](76)"
+behind     = "[ \u21E3$count](76)"
+diverged   = "[ \u21E3$behind_count\u21E1$ahead_count](76)"
+up_to_date = ""
+stashed    = "[ *$count](76)"
+conflicted = "[ ~$count](196)"
+staged     = "[ +$count](178)"
+modified   = "[ !$count](178)"
+renamed    = "[ !$count](178)"
+deleted    = "[ !$count](178)"
+untracked  = "[ ?$count](39)"
+
+# ── Prompt character ──────────────────────────────────────────
+# POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=76
+# POWERLEVEL9K_PROMPT_CHAR_ERROR_*_FOREGROUND=196
+# ❯ insert  ❮ normal  V visual  ▶ replace
+
+[character]
+format                    = "$symbol "
+success_symbol            = "[\u276F](76)"
+error_symbol              = "[\u276F](196)"
+vimcmd_symbol             = "[\u276E](76)"
+vimcmd_replace_one_symbol = "[\u25B6](76)"
+vimcmd_replace_symbol     = "[\u25B6](76)"
+vimcmd_visual_symbol      = "[V](76)"
+
+# ── Custom: tmux indicator ────────────────────────────────────
+# POWERLEVEL9K custom prompt_in_tmux: shows icon in green when $TMUX is set
+
+[custom.tmux]
+description = "Indicator when inside a tmux session"
+when        = 'test -n "$TMUX"'
+style       = "green"
+format      = "[\U000F0871]($style) "
+
+# ── Status ────────────────────────────────────────────────────
+# POWERLEVEL9K_STATUS_OK=false        → success_symbol = ""
+# POWERLEVEL9K_STATUS_ERROR_SIGNAL=true, STATUS_ERROR_PIPE=true
+# POWERLEVEL9K_STATUS_ERROR_FOREGROUND=160
+
+[status]
+disabled                 = false
+format                   = "[$symbol$status ]($style)"
+symbol                   = "\u2718"
+success_symbol           = ""
+not_executable_symbol    = "\u2718"
+not_found_symbol         = "\u2718"
+sigint_symbol            = "\u2718"
+signal_symbol            = "\u2718"
+style                    = "160"
+map_symbol               = true
+pipestatus               = true
+pipestatus_separator     = "|"
+pipestatus_format        = '\[$pipestatus\] => [$symbol$common_meaning$signal_name$maybe_int]($style) '
+pipestatus_segment_format = "[$status](160)"
+
+# ── Command duration ──────────────────────────────────────────
+# POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
+# POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=0
+# POWERLEVEL9K_COMMAND_EXECUTION_TIME_FORMAT='d h m s'
+# POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=101
+
+[cmd_duration]
+min_time          = 3_000
+format            = "[$duration ]($style)"
+style             = "101"
+show_milliseconds = false
+
+# ── Background jobs ───────────────────────────────────────────
+# POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false (icon only, no count)
+# POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=70
+
+[jobs]
+symbol           = "\U000F0493"
+style            = "70"
+number_threshold = 1
+symbol_threshold = 1
+format           = "[$symbol ]($style)"
+
+# ── Direnv ────────────────────────────────────────────────────
+# POWERLEVEL9K_DIRENV_FOREGROUND=178
+
+[direnv]
+disabled = false
+style    = "178"
+format   = "[$symbol$loaded/$allowed ]($style)"
+
+# ── Python ───────────────────────────────────────────────────
+# Covers: virtualenv, anaconda, pyenv
+# POWERLEVEL9K_VIRTUALENV_FOREGROUND=37, POWERLEVEL9K_PYENV_FOREGROUND=37
+
+[python]
+symbol              = "\U000F0320 "
+style               = "37"
+format              = "[$symbol$pyenv_prefix($version )($virtualenv )]($style)"
+pyenv_version_name  = true
+pyenv_prefix        = ""
+
+[conda]
+symbol       = "\U000F0320 "
+style        = "37"
+format       = "[$symbol$environment ]($style)"
+ignore_base  = true
+
+# ── Go ───────────────────────────────────────────────────────
+# POWERLEVEL9K_GO_VERSION_PROJECT_ONLY=true → detect_files limits display
+# POWERLEVEL9K_GOENV_FOREGROUND=37
+
+[golang]
+symbol       = "\U000F0847 "
+style        = "37"
+format       = "[$symbol($version )]($style)"
+detect_files = ["go.mod"]
+
+# ── Node.js ──────────────────────────────────────────────────
+# Covers: nodenv, nvm, nodeenv (all surface the active node version)
+# POWERLEVEL9K_NVM_FOREGROUND=70
+
+[nodejs]
+symbol            = "\U000F0399 "
+style             = "70"
+format            = "[$symbol($version )]($style)"
+detect_files      = ["package.json", ".node-version", ".nvmrc"]
+detect_folders    = ["node_modules"]
+detect_extensions = []
+
+# ── Ruby ─────────────────────────────────────────────────────
+# Covers: rbenv, rvm
+# POWERLEVEL9K_RBENV_FOREGROUND=168
+
+[ruby]
+symbol = "\U000F0D2D "
+style  = "168"
+format = "[$symbol($version )]($style)"
+
+# ── Rust ─────────────────────────────────────────────────────
+# POWERLEVEL9K_ASDF_RUST_FOREGROUND=37
+
+[rust]
+symbol       = "\U000F0D49 "
+style        = "37"
+format       = "[$symbol($version )]($style)"
+detect_files = ["Cargo.toml"]
+
+# ── Java ─────────────────────────────────────────────────────
+# Covers: jenv
+# POWERLEVEL9K_JENV_FOREGROUND=32, POWERLEVEL9K_JAVA_VERSION_PROJECT_ONLY=true
+
+[java]
+symbol       = "\U000F0B37 "
+style        = "32"
+format       = "[$symbol($version )]($style)"
+detect_files = ["pom.xml", "build.gradle", "build.gradle.kts", "*.java", ".java-version", "build.sbt"]
+
+# ── .NET ─────────────────────────────────────────────────────
+# POWERLEVEL9K_DOTNET_VERSION_FOREGROUND=134, PROJECT_ONLY=true
+
+[dotnet]
+symbol       = "\U000F0AAE "
+style        = "134"
+format       = "[$symbol($version )]($style)"
+detect_files = ["global.json", "project.json", "*.csproj", "*.fsproj", "*.xproj", "*.sln"]
+
+# ── PHP ──────────────────────────────────────────────────────
+# POWERLEVEL9K_PHPENV_FOREGROUND=99
+
+[php]
+symbol = "\U000F0B71 "
+style  = "99"
+format = "[$symbol($version )]($style)"
+
+# ── Lua ──────────────────────────────────────────────────────
+# POWERLEVEL9K_ASDF_LUA_FOREGROUND=32
+
+[lua]
+disabled = true
+style  = "32"
+format = "[$symbol($version )]($style)"
+
+# ── Perl ─────────────────────────────────────────────────────
+# Covers: plenv, perlbrew
+# POWERLEVEL9K_PLENV_FOREGROUND=67
+
+[perl]
+style  = "67"
+format = "[$symbol($version )]($style)"
+
+# ── Scala ────────────────────────────────────────────────────
+# POWERLEVEL9K_SCALAENV_FOREGROUND=160
+
+[scala]
+symbol = "\U000F1B99 "
+style  = "160"
+format = "[$symbol($version )]($style)"
+
+# ── Haskell ──────────────────────────────────────────────────
+# POWERLEVEL9K_HASKELL_STACK_FOREGROUND=172
+
+[haskell]
+symbol       = "\U000F0C92 "
+style        = "172"
+format       = "[$symbol($version )]($style)"
+detect_files = ["stack.yaml", "*.cabal", "*.hs"]
+
+# ── Kubernetes ───────────────────────────────────────────────
+# p10k showed this ONLY when running kubectl|helm|k9s|etc. (SHOW_ON_COMMAND).
+# Starship has no equivalent — disabled to avoid always-on clutter.
+# To enable per-project: override in ~/.config/starship.toml or a local .starship.toml.
+
+[kubernetes]
+disabled = true
+symbol   = "\u2638 "
+style    = "134"
+format   = "[$symbol$context(/$namespace )]($style)"
+
+# ── Terraform ────────────────────────────────────────────────
+
+[terraform]
+disabled = true
+symbol   = "\U000F1062 "
+style    = "38"
+format   = "[$symbol$workspace ]($style)"
+
+# ── AWS ──────────────────────────────────────────────────────
+# p10k showed only when running aws|terraform|pulumi|terragrunt.
+
+[aws]
+disabled = true
+symbol   = "\U000F0E0F "
+style    = "208"
+format   = "[$symbol$profile(/$region )]($style)"
+
+# ── Azure ────────────────────────────────────────────────────
+# p10k showed only when running az|terraform|pulumi|terragrunt.
+
+[azure]
+disabled = true
+symbol   = "\U000F0805 "
+style    = "32"
+format   = "[$symbol($subscription )]($style)"
+
+# ── Google Cloud ─────────────────────────────────────────────
+# p10k showed only when running gcloud|gcs|gsutil.
+
+[gcloud]
+disabled = true
+symbol   = "\u2601 "
+style    = "32"
+format   = "[$symbol$project ]($style)"
+
+# ── User@host (context) ───────────────────────────────────────
+# POWERLEVEL9K_CONTEXT_{DEFAULT,SUDO}_{CONTENT,VISUAL_IDENTIFIER}_EXPANSION=
+# → hidden for local default user; shown only for remote/SSH sessions
+# POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=180
+
+[username]
+show_always  = false
+style_user   = "180"
+style_root   = "178"
+format       = "[$user]($style)@"
+
+[hostname]
+ssh_only   = true
+style      = "180"
+ssh_symbol = "\U000F033E "
+format     = "[$ssh_symbol$hostname ]($style)"

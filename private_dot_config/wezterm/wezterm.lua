@@ -8,11 +8,6 @@ end
 config.window_decorations = "TITLE | RESIZE"
 
 config.font = wezterm.font("FiraCode Nerd Font")
--- config.color_scheme = "GitHub Dark"
--- config.color_scheme = "Molokai"
--- config.color_scheme = "Pro"
--- config.color_scheme = "Wez"
--- config.color_scheme = "Hardcore"
 config.color_scheme = "catppuccin-mocha"
 config.font_size = 12.0
 
@@ -69,67 +64,28 @@ table.insert(config.hyperlink_rules, {
 	format = "http://localhost:$1",
 })
 
--- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
-local function is_vim(pane)
-	-- this is set by the plugin, and unset on ExitPre in Neovim
-	return pane:get_user_vars().IS_NVIM == "true"
-end
-
-local direction_keys = {
-	h = "Left",
-	j = "Down",
-	k = "Up",
-	l = "Right",
-}
-
-local function split_nav(resize_or_move, key)
-	return {
-		key = key,
-		mods = resize_or_move == "resize" and "META" or "CTRL",
-		action = wezterm.action_callback(function(win, pane)
-			if is_vim(pane) then
-				-- pass the keys through to vim/nvim
-				win:perform_action({
-					SendKey = { key = key, mods = resize_or_move == "resize" and "META" or "CTRL" },
-				}, pane)
-			else
-				if resize_or_move == "resize" then
-					win:perform_action({ AdjustPaneSize = { direction_keys[key], 3 } }, pane)
-				else
-					win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
-				end
-			end
-		end),
-	}
-end
-
 config.leader = { key = "b", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
-	-- restore ctrl-l functionality
+	-- Ctrl+Shift+arrows for WezTerm pane navigation
+	{ key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
+	{ key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
+	{ key = "UpArrow", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
+	{ key = "DownArrow", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
+
+	-- Ctrl+Alt+Shift+arrows for resizing WezTerm panes
+	{ key = "LeftArrow", mods = "CTRL|ALT|SHIFT", action = wezterm.action.AdjustPaneSize({ "Left", 3 }) },
+	{ key = "RightArrow", mods = "CTRL|ALT|SHIFT", action = wezterm.action.AdjustPaneSize({ "Right", 3 }) },
+	{ key = "UpArrow", mods = "CTRL|ALT|SHIFT", action = wezterm.action.AdjustPaneSize({ "Up", 3 }) },
+	{ key = "DownArrow", mods = "CTRL|ALT|SHIFT", action = wezterm.action.AdjustPaneSize({ "Down", 3 }) },
+
+	-- restore ctrl-l functionality for clearing screen
 	{
 		key = "l",
 		mods = "LEADER",
-		action = wezterm.action_callback(function(win, pane)
-			if is_vim(pane) then
-				-- Send Neovim's redraw command
-				win:perform_action(wezterm.action.SendString(":redraw!\n"), pane)
-			else
-				-- Send Ctrl+L for other applications
-				win:perform_action(wezterm.action.SendKey({ key = "l", mods = "CTRL" }), pane)
-			end
-		end),
+		action = wezterm.action.SendKey({ key = "l", mods = "CTRL" }),
 	},
-	-- move between split panes
-	split_nav("move", "h"),
-	split_nav("move", "j"),
-	split_nav("move", "k"),
-	split_nav("move", "l"),
-	-- resize panes
-	split_nav("resize", "h"),
-	split_nav("resize", "j"),
-	split_nav("resize", "k"),
-	split_nav("resize", "l"),
+
 	-- mimic copy mode from tmux
 	{ key = "[", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
 	-- Zoom Zoom
@@ -259,6 +215,9 @@ local process_icons = {
 -- Return the Tab's current working directory
 local function get_cwd(tab)
 	-- Note, returns URL Object: https://wezfurlong.org/wezterm/config/lua/pane/get_current_working_dir.html
+	if not tab.active_pane or not tab.active_pane.current_working_dir then
+		return ""
+	end
 	return tab.active_pane.current_working_dir.file_path or ""
 end
 

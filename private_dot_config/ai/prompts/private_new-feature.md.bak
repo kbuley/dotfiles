@@ -1,0 +1,460 @@
+# New Feature Implementation Prompt
+
+Use this prompt when asking AI assistants to implement new features.
+
+## Prompt Template
+
+```
+Implement this feature following standards in .ai/context/AGENTS_[LANGUAGE].md:
+
+**Feature**: [Feature description]
+
+**Requirements**:
+- [Requirement 1]
+- [Requirement 2]
+
+**Constraints**:
+- [Constraint 1]
+
+Follow all patterns from AGENTS_*.md and provide:
+1. Implementation code
+2. Tests (following test patterns)
+3. Documentation
+4. LazyVim workflow (from EDITORS.md)
+```
+
+## Language-Specific Feature Implementation
+
+### Go Service
+
+```
+Implement a new Go service following .ai/context/AGENTS_GO.md:
+
+**Service**: [Name]
+**Purpose**: [Description]
+**Dependencies**: [List]
+
+Requirements:
+- Accept interfaces, return concrete types
+- Functional options for configuration
+- Context-aware methods
+- Table-driven tests
+- Proper error handling
+
+Provide:
+- Service interface (minimal)
+- Concrete implementation
+- Constructor with options
+- Tests with subtests
+- Usage examples
+```
+
+**Example Request**:
+
+```
+Implement a UserService that:
+- Fetches users from a database
+- Caches results
+- Handles errors properly
+- Is testable
+
+Follow AGENTS_GO.md patterns.
+```
+
+### Python Module
+
+```
+Implement a new Python module following .ai/context/AGENTS_PYTHON.md:
+
+**Module**: [Name]
+**Purpose**: [Description]
+
+Requirements:
+- Full type hints (mypy strict)
+- Pydantic models for validation
+- Async where appropriate
+- Comprehensive docstrings
+- pytest tests
+
+Provide:
+- Module code
+- Type definitions
+- Tests
+- Usage examples
+```
+
+**Example Request**:
+
+```
+Implement a data validation module that:
+- Validates user input
+- Uses Pydantic models
+- Returns typed results
+- Has complete type hints
+
+Follow AGENTS_PYTHON.md patterns.
+```
+
+### Vue Component
+
+```
+Implement a Vue component following .ai/context/AGENTS_TYPESCRIPT_VUE.md:
+
+**Component**: [Name]
+**Purpose**: [Description]
+
+Requirements:
+- Composition API with <script setup>
+- TypeScript strict mode
+- Typed props/emits
+- Composables for reusable logic
+- Component tests
+
+Provide:
+- Component code
+- Composables (if needed)
+- Tests
+- Usage examples
+```
+
+**Example Request**:
+
+```
+Implement a UserProfile component that:
+- Displays user information
+- Allows editing
+- Validates input
+- Emits save event
+
+Follow AGENTS_TYPESCRIPT_VUE.md patterns.
+```
+
+### PowerShell Function
+
+```
+Implement a PowerShell function following .ai/context/AGENTS_POWERSHELL.md:
+
+**Function**: [Name]
+**Purpose**: [Description]
+
+Requirements:
+- Multi-subscription by default
+- Use Graph API (not loops)
+- Proper error handling
+- Comment-based help
+- Pester tests
+
+Provide:
+- Function code
+- Help documentation
+- Tests
+- Usage examples
+```
+
+**Example Request**:
+
+```
+Implement Get-AllUnusedDisks that:
+- Finds unattached disks across all subscriptions
+- Uses Azure Resource Graph
+- Handles errors properly
+- Returns structured data
+
+Follow AGENTS_POWERSHELL.md patterns.
+```
+
+## Implementation Checklist
+
+Ask AI to confirm:
+
+```
+Before implementing, confirm:
+- [ ] Reviewed relevant AGENTS_*.md file
+- [ ] Understand required patterns
+- [ ] Know test approach
+- [ ] Have LazyVim workflow ready
+
+Then implement following all standards.
+```
+
+## Iterative Implementation
+
+### Step 1: Interface/Types
+
+```
+First, define interfaces and types following standards:
+
+Feature: [Description]
+
+Provide:
+- Interface definitions (Go)
+- Type definitions (Python/TypeScript)
+- Model schemas (Pydantic)
+
+Don't implement yet - just types.
+```
+
+### Step 2: Implementation
+
+```
+Now implement using the types we defined:
+
+[TYPES FROM STEP 1]
+
+Follow all patterns from AGENTS_*.md:
+- Error handling
+- Documentation
+- LazyVim snippets available
+```
+
+### Step 3: Tests
+
+```
+Add comprehensive tests following test patterns:
+
+[IMPLEMENTATION FROM STEP 2]
+
+Include:
+- Happy path tests
+- Error cases
+- Edge cases
+- Table-driven tests (Go)
+- Parametrized tests (Python)
+```
+
+## Feature with Multiple Files
+
+```
+Implement this feature across multiple files:
+
+Feature: [Description]
+
+Files needed:
+- [File 1]: [Purpose]
+- [File 2]: [Purpose]
+
+Follow AGENTS_*.md for each file's language.
+Structure as:
+.
+├── [file1]
+├── [file2]
+└── [file3]
+
+Provide all files with proper imports and integration.
+```
+
+## Integration with Existing Code
+
+```
+Add this feature to existing codebase:
+
+**Feature**: [Description]
+
+**Existing code structure**:
+[Brief description or tree]
+
+**Integration points**:
+- [Where it plugs in]
+
+Requirements:
+- Don't break existing code
+- Follow existing patterns AND standards
+- Add tests
+- Update documentation
+```
+
+## LazyVim Workflow Integration
+
+```
+Implement this feature and show LazyVim workflow:
+
+Feature: [Description]
+
+Provide:
+1. Implementation following AGENTS_*.md
+2. LazyVim keybindings to use (from EDITORS.md)
+3. Which-key commands
+4. Snippets to speed up implementation
+5. LSP actions available
+
+Walk me through the implementation in LazyVim.
+```
+
+## Testing Strategy
+
+```
+For this feature:
+
+[FEATURE DESCRIPTION]
+
+Provide:
+1. Test plan (what to test)
+2. Test implementation (following patterns)
+3. Coverage strategy
+4. Edge cases to consider
+
+Follow test patterns in AGENTS_*.md.
+```
+
+## Documentation Template
+
+Ask AI to include:
+
+````markdown
+## Feature: [Name]
+
+### Purpose
+
+[What it does]
+
+### Usage
+
+```[language]
+[Example code]
+```
+````
+
+### API
+
+- Function/Method signatures
+- Parameters
+- Return values
+- Errors
+
+### Examples
+
+[Multiple examples]
+
+### Testing
+
+[How to test]
+
+### LazyVim Tips
+
+- [Relevant keybindings]
+- [Available snippets]
+
+```
+
+## Examples by Complexity
+
+### Simple Feature
+
+```
+
+Add input validation to this function:
+
+[CODE]
+
+Follow AGENTS\_\*.md patterns:
+
+- Add type checking
+- Return proper errors
+- Add tests
+
+```
+
+### Medium Feature
+
+```
+
+Add caching layer to this service:
+
+[CODE]
+
+Follow AGENTS\_\*.md patterns:
+
+- Accept cache interface
+- Functional options for cache config
+- Handle cache misses
+- Add cache tests
+
+```
+
+### Complex Feature
+
+```
+
+Implement authentication system:
+
+Requirements:
+
+- JWT tokens
+- Refresh tokens
+- User sessions
+- Role-based access
+
+Follow AGENTS\_\*.md for all components:
+
+- Go: Service interfaces
+- Python: Pydantic models
+- TypeScript: Type definitions
+- Tests for all components
+
+```
+
+## Anti-Patterns to Avoid
+
+Remind AI:
+
+```
+
+When implementing, do NOT:
+
+- Use 'any' types (TypeScript/Python)
+- Return interfaces in Go
+- Loop over Azure resources in PowerShell
+- Skip error handling
+- Forget tests
+- Ignore documentation
+
+DO follow all patterns in AGENTS\_\*.md.
+
+````
+
+## Output Format
+
+```markdown
+## Implementation
+
+[Complete code]
+
+## Tests
+
+[Complete tests]
+
+## Usage Examples
+
+```[language]
+// Example 1
+[code]
+
+// Example 2
+[code]
+````
+
+## Documentation
+
+[Inline comments + external docs]
+
+## LazyVim Workflow
+
+1. Create file: `<leader>fn`
+2. Use snippet: `[name]`
+3. Add tests: `<leader>tt`
+4. Format: `<leader>cf`
+
+```
+
+## Tips
+
+- **Be specific**: Clear requirements prevent back-and-forth
+- **Reference standards**: "Follow the functional options pattern"
+- **Request tests**: Always ask for tests upfront
+- **Get LazyVim help**: Ask for editor workflow
+- **Iterate**: Start with types, then implementation, then tests
+
+## Version History
+
+- 2024-01-24: Initial version
+```

@@ -1,25 +1,16 @@
-#   zmodule ohmyzsh/ohmyzsh --root plugins/kubectl
-#   zmodule ohmyzsh/ohmyzsh --root plugins/kubectx
-#   zmodule ohmyzsh/ohmyzsh --root plugins/tmuxinator
-zmodule ohmyzsh/ohmyzsh --root plugins/brew
-#   zmodule ohmyzsh/ohmyzsh --root plugins/docker
-#   zmodule ohmyzsh/ohmyzsh --root plugins/docker-compose
-zmodule ohmyzsh/ohmyzsh --root plugins/git
-zmodule ohmyzsh/ohmyzsh --root plugins/gitfast
-zmodule ohmyzsh/ohmyzsh --root plugins/fzf
-zmodule ohmyzsh/ohmyzsh --root plugins/golang
-zmodule ohmyzsh/ohmyzsh --root plugins/podman
+# fpath must be populated before mattmc3/zshrc.d runs compinit
+zmodule zsh-users/zsh-completions --fpath src
+
+# sources zshrc.d/, which calls compinit via darwin.zsh
+zmodule mattmc3/zshrc.d
+
+# ohmyzsh plugins that use compdef must come after compinit
 zmodule ohmyzsh/ohmyzsh --root plugins/gpg-agent
 zmodule ohmyzsh/ohmyzsh --root plugins/tmux
 zmodule ohmyzsh/ohmyzsh --root plugins/copybuffer
-zmodule mattmc3/zshrc.d
-#   zmodule supercrabtree/k
-zmodule jonmosco/kube-ps1
-zmodule romkatv/powerlevel10k --use degit
-zmodule zsh-users/zsh-completions --fpath src
-#   zmodule completion
-zmodule zsh-users/zsh-history-substring-search
-zmodule zsh-users/zsh-syntax-highlighting
+
+# zsh-users plugins
 zmodule zsh-users/zsh-autosuggestions
-zmodule exa
+zmodule zsh-users/zsh-syntax-highlighting
+
 zmodule direnv

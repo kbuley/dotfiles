@@ -1,4 +1,8 @@
-# Read before any other z* files
+# Read before any other bash config files
+# Guard against being sourced multiple times
+[ -n "$__BASHENV_SOURCED" ] && return
+__BASHENV_SOURCED=1
+
 export XDG_DATA_HOME=${XDG_DATA_HOME:=$HOME/.local/share}
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=$HOME/.config}
 export XDG_STATE_HOME=${XDG_STATE_HOME:=$HOME/.local/state}
@@ -47,7 +51,7 @@ export REDISCLI_HISTFILE="$XDG_DATA_HOME"/redis/rediscli_history
 
 export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
 
-export HISTFILE="$XDG_STATE_HOME"/zsh/history
+export HISTFILE="$XDG_STATE_HOME"/bash/history
 
 export SSH_KEY_PATH="$HOME/.ssh/kevin@buley.org"
 
@@ -59,7 +63,6 @@ export DISABLE_AUTO_TITLE='true'
 
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
 
-export ZIM_HOME=${XDG_CACHE_HOME}/zim
 export VIMINIT="if has('nvim') | so ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua | else | set nocp | so ${XDG_CONFIG_HOME:-$HOME/.config}/vim/vimrc | endif"
 
 #color the man pages
@@ -87,4 +90,3 @@ export TERMINFO_DIRS="$XDG_DATA_HOME"/terminfo:/usr/share/terminfo
 export LESS="FRX"
 
 export DISABLE_AUTOUPDATER=1
-

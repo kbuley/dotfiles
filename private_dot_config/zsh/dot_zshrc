@@ -1,23 +1,29 @@
 if [[ -z "$XDG_CACHE_HOME" && -f "${ZDOTDIR}/.zshenv" ]]; then
     source "${ZDOTDIR}/.zshenv"
 fi
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# Bootstrap Homebrew — check Apple Silicon path first, then Intel fallback.
+# Must use explicit paths here: $PATH hasn't been corrected yet so
+# `command -v brew` would find /usr/local/bin/brew on an M-series Mac.
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-export PATH=$HOME/.local/bin:$PATH
+# Prepend personal paths after brew shellenv so they take precedence.
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
-autoload -Uz compinit
-compinit
+if command -v brew &>/dev/null; then
+  export DOTNET_ROOT=$(brew --prefix dotnet)/libexec
+
+  if [ -d "$(brew --prefix)/opt/ruby/bin" ]; then
+    export PATH=$(brew --prefix)/opt/ruby/bin:$PATH
+    export PATH=$(gem environment gemdir)/bin:$PATH
+  fi
+fi
 
 # Remove older command from the history if a duplicate is to be added.
 setopt HIST_IGNORE_ALL_DUPS
-
-# Set editor default keymap to emacs (`-e`) or vi (`-v`)
-bindkey -e
 
 # Remove path separator from WORDCHARS.
 WORDCHARS=${WORDCHARS//[\/]}
@@ -29,6 +35,14 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 # Set what highlighters will be used.
 # See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+
+# ------------------
+# Completions
+# ------------------
+if command -v brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh-completions:$FPATH"
+fi
+autoload -Uz compinit && compinit
 
 # ------------------
 # Initialize modules
@@ -51,52 +65,47 @@ fi
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh
 
-# ------------------------------
-# Post-init module configuration
-# ------------------------------
-
-#
-# zsh-history-substring-search
-#
-
-zmodload -F zsh/terminfo +p:terminfo
-# Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
-for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
-for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search-down
-for key ('k') bindkey -M vicmd ${key} history-substring-search-up
-for key ('j') bindkey -M vicmd ${key} history-substring-search-down
-unset key
-# }}} End configuration added by Zim install
-
-# To customize prompt, run `p10k configure`-
-[[ ! -f $POWERLEVEL9K_CONFIG_FILE ]] || source $POWERLEVEL9K_CONFIG_FILE
 
 export CLICOLOR=1
 export CLICOLOR_FORCE=1
 
 unset SSH_ASKPASS
 
-
-
-test -e "${ZDOTDIR}/.iterm2_shell_integration.zsh" && source "${ZDOTDIR}/.iterm2_shell_integration.zsh"
-
-if [ -f "`which nvim`" ]; then
+if command -v nvim &>/dev/null; then
   export EDITOR='nvim'
 else
   export EDITOR='vi'
 fi
 
-if [ -f "`which most 2> /dev/null`" ]; then
+if command -v most &>/dev/null; then
   export PAGER="most"
 else
   export PAGER="more"
 fi
 
-if [[ "$(uname -r)" = arm64 ]]; then
-  export ARCHFLAGS="-arch arm"
+if [[ "$(uname -m)" = arm64 ]]; then
+  export ARCHFLAGS="-arch arm64"
 fi
 
-
-if [ -x "$(command -v eza)" ]; then
+if command -v eza &>/dev/null; then
   alias ls='eza --group-directories-first --icons'
+  alias ll='eza -l --group-directories-first --icons'
+  alias lsa='eza -a --group-directories-first --icons'
+  alias lla='eza -la --group-directories-first --icons'
+  # Make completion work through aliases
+  compdef eza=ls
+else
+  warn "eza not installed. Install: brew install eza"
 fi
+
+# Install starship if missing, then initialize
+if ! command -v starship &>/dev/null; then
+  if command -v brew &>/dev/null; then
+    info "starship not found, installing via brew..."
+    brew install starship
+  else
+    info "starship not found, installing via install script..."
+    curl -sS https://starship.rs/install.sh | sh
+  fi
+fi
+eval "$(starship init zsh)"

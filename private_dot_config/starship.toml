@@ -86,6 +86,7 @@ repo_root_format = "[$before_root_path]($before_repo_root_style)[$repo_root]($re
 # POWERLEVEL9K_VCS_CLEAN_FOREGROUND=76
 
 [git_branch]
+ignore_bare_repo   = true
 symbol             = "\U000F062C "
 style              = "76"
 format             = "[$symbol$branch(:$remote_branch)]($style)"

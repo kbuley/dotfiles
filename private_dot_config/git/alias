@@ -22,6 +22,7 @@ list-archive = for-each-ref --sort=-authordate --format='%(refname) %(objectname
 worktree-clone = "!$XDG_CONFIG_HOME/git/git-worktree-clone"
 worktree-update = "!$XDG_CONFIG_HOME/git/git-worktree-update"
 worktree-branch = "!$XDG_CONFIG_HOME/git/git-worktree-branch"
+worktree-status = "!$XDG_CONFIG_HOME/git/git-worktree-status"
 difft = --paginate difftool --tool=difft
 dlog = -c diff.external=difft log -p --ext-diff
 dshow = -c diff.external=difft show --ext-diff

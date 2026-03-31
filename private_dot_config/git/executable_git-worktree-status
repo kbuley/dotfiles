@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+find_bare_repo_root() {
+    local current_dir="$PWD"
+    while [[ "$current_dir" != "/" ]]; do
+        if [[ -d "$current_dir/.bare" ]] && git -C "$current_dir/.bare" rev-parse --git-dir &>/dev/null; then
+            echo "$current_dir"
+            return 0
+        fi
+        current_dir="$(dirname "$current_dir")"
+    done
+    echo "Error: Not in a bare worktree repository" >&2
+    exit 1
+}
+
+git_root="$(find_bare_repo_root)"
+bare="$git_root/.bare"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+DIM='\033[2m'
+RESET='\033[0m'
+
+remote=$(git -C "$bare" remote get-url origin 2>/dev/null || echo "unknown")
+echo -e "${BOLD}${BLUE}$(basename "$git_root")${RESET} ${DIM}${remote}${RESET}"
+echo ""
+
+# Collect rows first so we can calculate column widths
+rows=()
+worktree_col=()
+state_col=()
+commit_col=()
+committer_col=()
+suffix_col=()
+
+while read -r worktree_path; do
+    worktree_name=$(basename "$worktree_path")
+    branch_name=$(git -C "$worktree_path" branch --show-current 2>/dev/null || true)
+
+    if [[ -z "$branch_name" ]]; then
+        branch_name="(detached HEAD)"
+    fi
+
+    # State
+    porcelain=$(git -C "$worktree_path" status --porcelain 2>/dev/null)
+    stash_count=$(git -C "$worktree_path" stash list 2>/dev/null | wc -l | tr -d ' ')
+
+    if [[ -n "$porcelain" ]]; then
+        state="dirty"
+        state_color="$YELLOW"
+    else
+        state="clean"
+        state_color="$GREEN"
+    fi
+    if [[ "$stash_count" -gt 0 ]]; then
+        state="${state}+${stash_count}"
+    fi
+
+    # Last commit date and committer
+    last_commit=$(git -C "$worktree_path" log -1 --format='%ar' 2>/dev/null || echo "unknown")
+    last_committer=$(git -C "$worktree_path" log -1 --format='%an' 2>/dev/null || echo "unknown")
+
+    # Branch/dir mismatch suffix
+    if [[ "$branch_name" != "$worktree_name" ]] && [[ "$branch_name" != "(detached HEAD)" ]]; then
+        suffix="(branch: $branch_name)"
+    else
+        suffix=""
+    fi
+
+    worktree_col+=("$worktree_name")
+    state_col+=("$state|$state_color")
+    commit_col+=("$last_commit")
+    committer_col+=("$last_committer")
+    suffix_col+=("$suffix")
+
+done < <(git -C "$bare" worktree list --porcelain | awk '/^worktree/ && !/\.bare$/ {print $2}')
+
+# Calculate column widths
+w_worktree=8   # "WORKTREE"
+w_state=5      # "STATE"
+w_commit=11    # "LAST_COMMIT"
+w_committer=13 # "LAST_COMMITTER"
+
+for i in "${!worktree_col[@]}"; do
+    [[ ${#worktree_col[$i]} -gt $w_worktree ]] && w_worktree=${#worktree_col[$i]}
+    state_plain="${state_col[$i]%%|*}"
+    [[ ${#state_plain} -gt $w_state ]] && w_state=${#state_plain}
+    [[ ${#commit_col[$i]} -gt $w_commit ]] && w_commit=${#commit_col[$i]}
+    [[ ${#committer_col[$i]} -gt $w_committer ]] && w_committer=${#committer_col[$i]}
+done
+
+# Header
+printf "${BOLD}%-${w_worktree}s  %-${w_state}s  %-${w_commit}s  %-${w_committer}s${RESET}\n" \
+    "WORKTREE" "STATE" "LAST_COMMIT" "LAST_COMMITTER"
+printf "${DIM}%s${RESET}\n" "$(printf '%.0s─' $(seq 1 $((w_worktree + w_state + w_commit + w_committer + 6))))"
+
+# Rows
+for i in "${!worktree_col[@]}"; do
+    state_plain="${state_col[$i]%%|*}"
+    state_color="${state_col[$i]##*|}"
+    suffix=""
+    [[ -n "${suffix_col[$i]}" ]] && suffix=" ${DIM}${suffix_col[$i]}${RESET}"
+
+    printf "%-${w_worktree}s  ${state_color}%-${w_state}s${RESET}  %-${w_commit}s  %-${w_committer}s%b\n" \
+        "${worktree_col[$i]}" \
+        "$state_plain" \
+        "${commit_col[$i]}" \
+        "${committer_col[$i]}" \
+        "$suffix"
+done
+
+echo ""
+if [[ "$(uname)" == "Darwin" ]]; then
+    last_fetch=$(stat -f '%Sm' -t '%Y-%m-%d %H:%M' "$bare/FETCH_HEAD" 2>/dev/null || echo "never")
+else
+    last_fetch=$(stat -c '%y' "$bare/FETCH_HEAD" 2>/dev/null | cut -d'.' -f1 || echo "never")
+fi
+echo -e "${DIM}Last fetch: ${last_fetch}${RESET}"

@@ -1,6 +1,18 @@
+# Stop loops in certain situations (like vscode terminal)
 if [[ -z "$XDG_CACHE_HOME" && -f "${ZDOTDIR}/.zshenv" ]]; then
     source "${ZDOTDIR}/.zshenv"
 fi
+
+# matches case insensitive for lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# pasting with tabs doesn't perform completion
+zstyle ':completion:*' insert-tab pending
+
+# highlights options as you tab through
+zstyle ':completion:*' menu select
+
+
 # Bootstrap Homebrew — check Apple Silicon path first, then Intel fallback.
 # Must use explicit paths here: $PATH hasn't been corrected yet so
 # `command -v brew` would find /usr/local/bin/brew on an M-series Mac.
@@ -20,6 +32,11 @@ if command -v brew &>/dev/null; then
     export PATH=$(brew --prefix)/opt/ruby/bin:$PATH
     export PATH=$(gem environment gemdir)/bin:$PATH
   fi
+fi
+
+# bat is so much prettier
+if command -v bat &>/dev/null; then
+  alias cat="bat -pp"
 fi
 
 # Remove older command from the history if a duplicate is to be added.

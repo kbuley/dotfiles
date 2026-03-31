@@ -25,4 +25,19 @@ function git-root() {
     fi
 }
 
+function _set_repo_root() {
+    local current="$PWD"
+    while [[ "$current" != "/" ]]; do
+        if [[ -d "$current/.bare" ]] && git -C "$current/.bare" rev-parse --git-dir &>/dev/null; then
+            export REPOROOT=$(basename "$current")
+            return
+        fi
+        current=$(dirname "$current")
+    done
+    unset REPOROOT
+}
+
+add-zsh-hook chpwd _set_repo_root
+_set_repo_root  # run on shell init
+
 

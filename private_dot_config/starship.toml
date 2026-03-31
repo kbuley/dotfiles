@@ -12,6 +12,7 @@ command_timeout = 2000
 
 format = """\
 $os\
+$env_var\
 $directory\
 $git_branch\
 $git_commit\
@@ -70,9 +71,10 @@ Windows = "\U000F05B3"
 # POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=39, POWERLEVEL9K_DIR_ANCHOR_BOLD=true
 
 [directory]
+fish_style_pwd_dir_length = 3
 style                  = "31"
 truncation_length      = 3
-truncate_to_repo       = true
+truncate_to_repo       = false
 truncation_symbol      = ""        # POWERLEVEL9K_SHORTEN_DELIMITER=
 before_repo_root_style = "103"
 repo_root_style        = "bold 39"
@@ -390,3 +392,8 @@ ssh_only   = true
 style      = "180"
 ssh_symbol = "\U000F033E "
 format     = "[$ssh_symbol$hostname ]($style)"
+
+[env_var.REPOROOT]
+variable = "REPOROOT"
+format = "[\\[]($style)[$env_value]($style)[\\]]($style) "
+style = "bold cyan"

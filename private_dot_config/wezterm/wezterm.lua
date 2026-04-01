@@ -7,9 +7,8 @@ end
 
 config.window_decorations = "TITLE | RESIZE"
 
-config.font = wezterm.font("FiraCode Nerd Font", {
-	harfbuzz_features = { "calt=1", "clig=1", "liga=1" },
-})
+config.font = wezterm.font("FiraCode Nerd Font")
+config.harfbuzz_features = { "calt=1", "clig=1", "liga=1" }
 config.color_scheme = "catppuccin-mocha"
 config.font_size = 12.0
 

@@ -88,3 +88,4 @@ export LESS="FRX"
 
 export DISABLE_AUTOUPDATER=1
 
+export AZURE_MCP_COLLECT_TELEMETRY=false

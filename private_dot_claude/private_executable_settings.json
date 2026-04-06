@@ -1,0 +1,10 @@
+{
+  "autoUpdatesChannel": "stable",
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
+  },
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true
+  }
+}

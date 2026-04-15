@@ -39,6 +39,11 @@ if command -v bat &>/dev/null; then
   alias cat="bat -pp"
 fi
 
+# prefer litecli if available
+if command -v litecli &>/dev/null); then
+  alias sqlite3="litecli"
+fi
+
 # Remove older command from the history if a duplicate is to be added.
 setopt HIST_IGNORE_ALL_DUPS
 
@@ -109,6 +114,8 @@ if command -v eza &>/dev/null; then
   alias ll='eza -l --group-directories-first --icons'
   alias lsa='eza -a --group-directories-first --icons'
   alias lla='eza -la --group-directories-first --icons'
+  alias lt='eza --tree --icons --long --git'
+  alias lta='eza --tree --icons --long --git --absolute'
   # Make completion work through aliases
   compdef eza=ls
 else

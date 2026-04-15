@@ -17,3 +17,8 @@ LICENSE
 .ssh/**
 .local/share/gnupg/**
 {{- end -}}
+
+{{ if stat (joinPath .chezmoi.homeDir ".config/npm/npmrc") }}
+.config/npm/npmrc
+{{ end }}
+

@@ -40,7 +40,7 @@ if command -v bat &>/dev/null; then
 fi
 
 # prefer litecli if available
-if command -v litecli &>/dev/null); then
+if command -v litecli &>/dev/null; then
   alias sqlite3="litecli"
 fi
 

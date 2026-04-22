@@ -92,3 +92,4 @@ export AZURE_MCP_COLLECT_TELEMETRY=false
 
 export PATH="${XDG_DATA_HOME}/npm/bin:$PATH"
 
+export HOMEBREW_NO_ENV_HINTS=1
